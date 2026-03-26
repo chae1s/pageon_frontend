@@ -27,6 +27,11 @@ export const HeaderLogoSearchUser = styled.div`
 export const HeaderLogo = styled(Link)`
   display: inline-flex;
   width: fit-content;
+
+  img {
+    height: 35px;
+    width: auto;
+  }
 `
 
 export const BookSearchForm = styled.form`

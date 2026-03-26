@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import styled from "styled-components";
 import * as H from "../Styles/Header.styles"
-import logo from '../../assets/icon.png'
+import logo from '../../assets/creator_logo.png'
 import axios from "axios";
 
 const CreatorHeaderSpace = styled.div`
@@ -53,25 +53,12 @@ function CreatorHeader() {
                     </CreatorHeaderSpace>
                     <H.AuthLinkContainer>
                         <H.AuthLinkList>
-                            {isAuthenticated ? (
-                                <>
-                                    <H.AuthLinkItem $last = {false}>
-                                        <Link to={"#logout"} onClick={handleLogoutClick}>로그아웃</Link>
-                                    </H.AuthLinkItem>
-                                    <H.AuthLinkItem $last = {true}>
-                                        <Link to={"/users/my-page"}>마이페이지</Link> 
-                                    </H.AuthLinkItem>
-                                </>
-                            ) : (
-                                <>
-                                    <H.AuthLinkItem $last = {false}>
-                                        <H.AuthLink to={"/users/signup"}>회원가입</H.AuthLink>
-                                    </H.AuthLinkItem>
-                                    <H.AuthLinkItem $last = {true}>
-                                        <H.AuthLink to={"/users/login"}>로그인</H.AuthLink> 
-                                    </H.AuthLinkItem>
-                                </>
-                            )}
+                            <H.AuthLinkItem $last = {false}>
+                                
+                            </H.AuthLinkItem>
+                            <H.AuthLinkItem $last = {true}>
+                                
+                            </H.AuthLinkItem>
                         </H.AuthLinkList>
                     </H.AuthLinkContainer>
                 </H.HeaderLogoSearchUser>
@@ -82,11 +69,14 @@ function CreatorHeader() {
                         <H.HeaderNavLink $first = {false} to={"/webnovels"}>수익 관리</H.HeaderNavLink>
                     </H.HeaderLinkList>
                     <H.HeaderEtcLinkList>
-                        <H.HeaderEtcLink to={"/"}>
-                            <H.HeaderEtcLinkText>홈</H.HeaderEtcLinkText>
+                    <H.HeaderEtcLink to={"/"}>
+                            <H.HeaderEtcLinkText>알림</H.HeaderEtcLinkText>
                         </H.HeaderEtcLink>
                         <H.HeaderEtcLink to={"/"}>
-                            <H.HeaderEtcLinkText>알림</H.HeaderEtcLinkText>
+                            <H.HeaderEtcLinkText>pageOn 홈</H.HeaderEtcLinkText>
+                        </H.HeaderEtcLink>
+                        <H.HeaderEtcLink to={"#logout"} onClick={handleLogoutClick}>
+                            <H.HeaderEtcLinkText>로그아웃</H.HeaderEtcLinkText>
                         </H.HeaderEtcLink>
                     </H.HeaderEtcLinkList>
                 </H.HeaderContentsEtc>
