@@ -79,23 +79,4 @@ export interface RecentReadContent {
     status: string;
 }
 
-export interface CreateContent {
-    title: string;
-    description: string;
-    contentType: string;
-    publishedAt: string;
-    keywords: string;
-    coverImage: File;
-    workStatus: string;
-}
 
-export interface CreatorContentList {
-    contentId: number;
-    contentTitle: string;
-    cover: string;
-    contentType: string;
-    workStatus: string;
-    seriesStatus: string;
-    serialDay: string;
-    episodeUpdatedAt: string
-}

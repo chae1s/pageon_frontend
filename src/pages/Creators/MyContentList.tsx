@@ -4,7 +4,7 @@ import { MainContainer, SidebarMain, SidebarRightWrap, SortBtn } from "../../sty
 import * as S from "./CreatorContent.styles";
 import api from "../../api/axiosInstance";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { CreatorContentList } from "../../types/Content";
+import { CreatorContentList } from "../../types/Creator";
 import { Pagination } from "../../types/Page";
 import PageNavigator from "../../components/Pagination/PageNavigator";
 
@@ -16,7 +16,7 @@ function MyContentList() {
     const [pageData, setPageData] = useState<Pagination<CreatorContentList> | null>(null);
 
     const sort = searchParams.get("sort") || "update";
-    const seriesStatus = searchParams.get("seriesStatus") || "ALL";
+    const seriesStatus = searchParams.get("seriesStatus") || "ONGOING";
     const page = parseInt(searchParams.get("page") || "0", 10);
 
     const handleParamClick = (newKey: string, newValue: string) => {
@@ -121,8 +121,15 @@ function MyContentList() {
                                                     {statusMap[content.workStatus === "PUBLISHED" ? content.seriesStatus : content.workStatus] || ""}
                                                 </S.ContentStatus>
                                             </S.ContentMetaRow>
+                                            {content.keywords && content.keywords.length > 0 && (
+                                                <S.ContentKeywordWrap>
+                                                    {content.keywords.map((keyword, idx) => (
+                                                        <S.ContentKeywordItem key={`${keyword}-${idx}`}>#{keyword}</S.ContentKeywordItem>
+                                                    ))}
+                                                </S.ContentKeywordWrap>
+                                            )}
                                             <S.ContentActionWrap>
-                                                <S.ContentActionLink onClick={() => navigate(`/creators/contents/update/${content.contentId}`)}>
+                                                <S.ContentActionLink onClick={() => navigate(`/creators/contents/${content.contentId}/update`)}>
                                                     수정
                                                 </S.ContentActionLink>
                                                 <S.ContentActionLink $danger onClick={() => {

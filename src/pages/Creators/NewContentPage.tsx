@@ -4,7 +4,7 @@ import { MainContainer, SidebarMain, SidebarRightWrap } from "../../styles/Layou
 import * as S from "./CreatorContent.styles";
 import CreatorSidebar from "../../components/Sidebars/CreatorSidebar";
 import DatePicker from "../../components/DatePicker/DatePicker";
-import { CreateContent } from "../../types/Content";
+import { CreateContent } from "../../types/Creator";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axiosInstance";
 

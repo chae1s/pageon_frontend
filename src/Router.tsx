@@ -40,6 +40,8 @@ import PaymentFail from "./pages/Payments/PaymentFail";
 import OAuthRedirectHandler from "./pages/Users/OAuthRedirectHandler";
 import NewContentPage from "./pages/Creators/NewContentPage";
 import MyContentList from "./pages/Creators/MyContentList";
+import UpdateContentPage from "./pages/Creators/UpdateContentPage";
+import UpdateContentChoicePage from "./pages/Creators/UpdateContentChoicePage";
 
 function Router() {
     const location = useLocation();
@@ -108,6 +110,8 @@ function Router() {
                     <Route path="/creators/dashboard" element={<CreatorDashbord />} />
                     <Route path="/creators/contents/new" element={<NewContentPage />} />
                     <Route path="/creators/contents/list" element={<MyContentList />} />
+                    <Route path="/creators/contents/update" element={<UpdateContentChoicePage />} />
+                    <Route path="/creators/contents/:contentId/update" element={<UpdateContentPage />} />
                 </Route>
 
 

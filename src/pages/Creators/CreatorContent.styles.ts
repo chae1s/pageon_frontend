@@ -197,6 +197,32 @@ export const TypeSelectBox = styled.label<{ $selected: boolean }>`
     }
 `;
 
+export const TextSelectGroup = styled.div`
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    height: 42px;
+`;
+
+export const TextSelectBox = styled.label<{ $selected: boolean }>`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: ${({ $selected }) => ($selected ? "700" : "500")};
+    color: ${({ $selected }) => ($selected ? "#528efa" : "#888")};
+    transition: color 0.2s;
+
+    input {
+        display: none;
+    }
+
+    &:hover {
+        color: ${({ $selected }) => ($selected ? "#528efa" : "#444")};
+    }
+`;
+
 export const FileInput = styled.input`
     display: none;
 `;
@@ -375,7 +401,18 @@ export const ContentMetaRow = styled.div`
     align-items: center;
     font-size: 13px;
     color: #888;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+`;
+
+export const ContentKeywordWrap = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+`;
+
+export const ContentKeywordItem = styled.span`
+    font-size: 14px;
 `;
 
 export const ContentActionWrap = styled.div`
@@ -483,3 +520,214 @@ export const EmptyState = styled.div`
     font-size: 16px;
     margin-top: 24px;
 `;
+
+export const CreatorContentListWrapper = styled.div`
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding-bottom: 50px;
+`
+
+export const CreatorContentList = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+`
+
+export const EmptyListText = styled.div`
+    margin: 10px auto;
+`
+
+export const ContentItem = styled.div`
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+    background: #fff;
+    width: calc(50% - 8px);
+    min-height: 160px;
+    box-sizing: border-box;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: default;
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
+`;
+
+export const ContentImageCover = styled.div`
+    height: 150px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #f6f6f6;
+    flex-shrink: 0;
+`;
+
+export const ContentImage = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+`;
+
+export const ContentInfoCover = styled.div<{ $history: boolean }>`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    margin: auto 0;
+    ${({ $history }) => ($history ? "max-width: 166px" : "")};
+`;
+
+export const ContentTitleWrapper = styled.div`
+    
+`
+
+export const ContentTitle = styled.div`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal;
+    max-height: calc(19px + 1);
+    line-height: 19px;
+    word-break: break-all;
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    padding-right: 10px;
+`;
+
+export const ContentInfoWrapper = styled.div`
+    display: inline-flex;
+    font-size: 14px;
+    color: #666;
+    line-height: 19px;
+`
+
+export const ContentAuthor = styled.div`
+    
+`;
+
+export const ContentType = styled.div`
+    
+`
+
+
+export const ContentEpisodeUpdatedAt = styled.div`
+    
+`
+
+
+export const ContentBadge = styled.span`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 8px;
+    border-radius: 8px;
+    background: #eef2ff;
+    color: #3b5bdb;
+    font-size: 12px;
+    font-weight: 600;
+`;
+
+
+export const ContentLastReadHistory = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 14px;
+    line-height: 19px;
+`;
+
+export const ContentEpisodeReadBtn = styled.button`
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    width: 74px;
+    min-width: 74px;
+    flex-shrink: 0;
+`
+
+export const ContentEpisodeReadBtnText = styled.div`
+    font-size: 14px;
+    line-height: 19px;
+    color: #444;
+`
+
+export const ContentEpisodeReadIcon = styled.img`
+    width: 19px;
+    height: 19px;
+`
+
+
+export const CreatorSimpleSortBtnWrapper = styled.div`
+    display: block;
+`
+
+export const CreatorSimpleSortBtnList = styled.div`
+    display: block;
+    padding-left: 8px;
+    margin-bottom: 16px;
+`
+
+export const CreatorSimpleSelectType = styled.div`
+    display: flex;
+    gap: 14px;
+    color: #444;
+    font-size: 0.98rem;
+    padding: 10px 0 10px 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, .1)
+`
+
+export const SortBtn = styled.button<{ active: boolean }>`
+    color: ${({ active }) => (active ? "#69a3ff" : "#b4b4b4")};
+    font-weight: ${({ active }) => (active ? "500" : "")};
+`
+
+export const CreatorSimpleSearchSelectSort = styled.div`
+    display: flex;
+    justify-content: space-between;
+`
+
+export const MypageCommentsSection = styled.section`
+    padding-left: 10px;
+`
+
+export const CreatorSimpleSearchGroup = styled.div`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 250px;
+    margin: 12px 0 0 0;
+`
+
+export const CreatorSimpleSearchInput = styled.input`
+    flex: 1;
+    padding: 8px 8px 6px 8px;
+    border: none;
+    border-radius: 0;
+    font-size: 1rem;
+    background: none;
+    color: #222;
+`
+
+export const CreatorSimpleSearchBtn = styled.button`
+    background: none;
+    border: none;
+    padding: 0 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: 32px;
+`
+
+export const CreatorSimpleSortGroup = styled.div`
+    display: flex;
+    gap: 12px;
+    font-size: 0.85em;
+    padding: 10px 8px;
+`
+
+
+
+

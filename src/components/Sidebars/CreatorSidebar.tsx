@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import * as S from "../Styles/Sidebar.styles";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 
 function CreatorSidebar() {
+    const location = useLocation();
+    
+    // 작품 수정 페이지 경로 정규식 검사 (ex: /creators/contents/update, /creators/contents/1/update)
+    const isUpdateContentActive = location.pathname === "/creators/contents/update" || 
+                                  /^\/creators\/contents\/\d+\/update$/.test(location.pathname);
 
     return (
         <S.SidebarContainser>
@@ -21,7 +26,12 @@ function CreatorSidebar() {
                                     <S.SidebarNavLink to={"/creators/contents/new"}>작품 등록</S.SidebarNavLink>
                                 </S.SidebarNavItemLi>
                                 <S.SidebarNavItemLi>
-                                    <S.SidebarNavLink to={"/creators/contents/update"}>작품 수정</S.SidebarNavLink>
+                                    <S.SidebarNavLink 
+                                        to={"/creators/contents/update"} 
+                                        className={isUpdateContentActive ? "active" : ""}
+                                    >
+                                        작품 수정
+                                    </S.SidebarNavLink>
                                 </S.SidebarNavItemLi>
                                 <S.SidebarNavItemLi>
                                     <S.SidebarNavLink to={"/library/my-comments"}>작품 반응</S.SidebarNavLink>
