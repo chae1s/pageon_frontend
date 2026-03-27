@@ -88,3 +88,14 @@ export interface CreateContent {
     coverImage: File;
     workStatus: string;
 }
+
+export interface CreatorContentList {
+    contentId: number;
+    contentTitle: string;
+    cover: string;
+    contentType: string;
+    workStatus: string;
+    seriesStatus: string;
+    serialDay: string;
+    episodeUpdatedAt: string
+}

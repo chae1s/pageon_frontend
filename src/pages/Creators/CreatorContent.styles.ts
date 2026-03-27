@@ -1,10 +1,33 @@
 import styled from "styled-components";
 
 export const CreatorTitle = styled.h2`
-    font-size: 1.3rem;
+    font-size: 24px;
     font-weight: 700;
     margin-bottom: 24px;
-`
+`;
+
+export const CreatorFilterSortRow = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+export const CreatorFilterWrap = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: #444;
+    font-size: 0.85em;
+`;
+
+export const CreatorSortWrap = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px;
+    color: #444;
+    font-size: 0.85em;
+`;
 
 export const RegisterForm = styled.form`
     width: 100%;
@@ -294,4 +317,169 @@ export const ImageModalButton = styled.button<{ $variant?: 'danger' | 'cancel' }
     color: ${({ $variant }) =>
         $variant === 'danger' ? '#d32f2f' :
             $variant === 'cancel' ? '#666' : '#1976d2'};
+`;
+
+export const ListContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    margin: 15px 0 40px;
+`;
+
+export const ContentCard = styled.div`
+    display: flex;
+    background: #fff;
+    border: 1px solid #ebebeb;
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 24px;
+    gap: 24px;
+    cursor: default;
+`;
+
+export const ContentInfoSection = styled.div`
+    width: 360px;
+    flex-shrink: 0;
+    display: flex;
+    gap: 20px;
+`;
+
+export const EpisodeInfoSection = styled.div`
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #eee;
+    padding-left: 24px;
+`;
+
+export const InfoThumbnail = styled.img`
+    width: 130px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+    border: 1px solid #eee;
+`;
+
+export const InfoTextWrap = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1;
+    min-width: 0;
+`;
+
+export const ContentMetaRow = styled.div`
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 8px;
+`;
+
+export const ContentActionWrap = styled.div`
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+`;
+
+export const ContentActionLink = styled.span<{ $danger?: boolean }>`
+    font-size: 13px;
+    color: ${({ $danger }) => ($danger ? '#c62828' : '#888')};
+    cursor: pointer;
+`;
+
+export const ContentMetaItem = styled.span`
+    /* font overrides if necessary */
+`;
+
+export const ContentSeparate = styled.span`
+
+`;
+
+export const ContentStatus = styled.span`
+
+`;
+
+export const CardTitle = styled.h3`
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+`;
+
+// Episode Side Styles
+export const EpisodeHeaderWrap = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+`;
+
+export const EpisodeSectionTitle = styled.h4`
+    font-size: 15px;
+    font-weight: 600;
+    color: #444;
+    margin: 0;
+`;
+
+export const NewEpisodeButton = styled.button`
+    padding: 6px 12px;
+    background: #528efa;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+`;
+
+export const MockEpisodeItem = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+`;
+
+export const ActionButtonWrap = styled.div`
+    margin-top: auto;
+    display: flex;
+    gap: 12px;
+`;
+
+export const ActionButton = styled.button<{ $primary?: boolean }>`
+    flex: 1;
+    padding: 10px 0;
+    border: 1px solid ${({ $primary }) => ($primary ? '#528efa' : '#ddd')};
+    background: ${({ $primary }) => ($primary ? '#528efa' : '#fff')};
+    color: ${({ $primary }) => ($primary ? '#fff' : '#555')};
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+`;
+
+export const EmptyState = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #ebebeb;
+    color: #888;
+    font-size: 16px;
+    margin-top: 24px;
 `;
