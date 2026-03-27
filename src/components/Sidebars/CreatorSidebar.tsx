@@ -18,7 +18,7 @@ function CreatorSidebar() {
                                     <S.SidebarNavLink to={"/creators/works"} >내 작품 목록</S.SidebarNavLink>
                                 </S.SidebarNavItemLi>
                                 <S.SidebarNavItemLi>
-                                    <S.SidebarNavLink to={"/library/recent-view"}>작품 등록</S.SidebarNavLink>
+                                    <S.SidebarNavLink to={"/creators/contents/new"}>작품 등록</S.SidebarNavLink>
                                 </S.SidebarNavItemLi>
                                 <S.SidebarNavItemLi>
                                     <S.SidebarNavLink to={"/library/my-comments"}>에피소드 관리</S.SidebarNavLink>

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { styled } from "styled-components";
-import { MainContainer, SidebarMain } from "../../styles/Layout.styles";
+import { MainContainer, SidebarMain, SidebarRightWrap } from "../../styles/Layout.styles";
 import * as M from "./MyPage.styles"
 import { UserProfile, DeleteRequest } from "../../types/User";
 import axios from "axios";
@@ -257,7 +257,7 @@ function Withdraw() {
         <MainContainer>
             <SidebarMain>
                 <Sidebar />
-                <M.SidebarRightWrap>
+                <SidebarRightWrap>
                     <M.MypageTitle>회원탈퇴</M.MypageTitle>
                     <WithdrawWarning>
                         <WithdrawEmail>{userInfo?.email}</WithdrawEmail><WithdrawEmailUnit>님</WithdrawEmailUnit>
@@ -317,7 +317,7 @@ function Withdraw() {
                             <M.SubmitBtn type="submit">탈퇴하기</M.SubmitBtn>
                         </WithdrawPasswordCheck>
                     </form>
-                </M.SidebarRightWrap>
+                </SidebarRightWrap>
             </SidebarMain>
         </MainContainer>
     )

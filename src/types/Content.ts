@@ -79,3 +79,12 @@ export interface RecentReadContent {
     status: string;
 }
 
+export interface CreateContent {
+    title: string;
+    description: string;
+    contentType: string;
+    publishedAt: string;
+    keywords: string;
+    coverImage: File;
+    workStatus: string;
+}

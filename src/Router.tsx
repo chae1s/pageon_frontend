@@ -38,6 +38,7 @@ import PointCharge from "./pages/Users/PointCharge";
 import PaymentSuccess from "./pages/Payments/PaymentSuccess";
 import PaymentFail from "./pages/Payments/PaymentFail";
 import OAuthRedirectHandler from "./pages/Users/OAuthRedirectHandler";
+import NewContentPage from "./pages/Creators/NewContentPage";
 
 function Router() {
     const location = useLocation();
@@ -50,65 +51,66 @@ function Router() {
         /^\/webtoons\/[^/]+\/viewer\/[^/]+$/.test(location.pathname) ||
         /^\/webnovels\/[^/]+\/viewer\/[^/]+\/comments$/.test(location.pathname) ||       // 웹소설 댓글 페이지
         /^\/webtoons\/[^/]+\/viewer\/[^/]+\/comments$/.test(location.pathname)
-        ;   
+        ;
 
     const creatorHeader = location.pathname.startsWith("/creators");
     const isAuthenticated = !!localStorage.getItem("accessToken");
 
     return (
         <>
-        <GlobalStyle/>
-        {!hideHeaderFooter && !creatorHeader && <Header></Header>}
-        {!hideHeaderFooter && creatorHeader && <CreatorHeader/>}
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/webnovels" element={<WebnovelHome />} />
-            <Route path="/webtoons" element={<WebtoonHome />} />
-            <Route path="/webnovels/new" element={<NewContents contentType="WEBNOVEL"/>} />
-            <Route path="/webtoons/new" element={<NewContents contentType="WEBTOON"/>} />
-            <Route path="/contents/masterpiece" element={<MasterpieceContents contentType="ALL"/>} />
-            <Route path="/webnovels/masterpiece" element={<MasterpieceContents contentType="WEBNOVEL"/>} />
-            <Route path="/webtoons/masterpiece" element={<MasterpieceContents contentType="WEBTOON"/>} />
-            <Route path="/webnovels/recommend/by-keyword" element={<RecommendKeywordContents contentType="WEBNOVEL" />} />
-            <Route path="/webtoons/recommend/by-keyword" element={<RecommendKeywordContents contentType="WEBTOON" />} />
-            <Route path="/webnovels/:contentId" element={<WebnovelDetailPage />} />
-            <Route path="/webtoons/:contentId" element={<WebtoonDetailPage />} />
-            <Route path="/search/keyword" element={<KeywordSearch/>} />
-            <Route path="/search" element={<TitleCreatorSearch />} />
-            <Route path="/oauth/callback" element={< OAuthRedirectHandler />} />
-            <Route element={<PublicOnlyRoute/>} >
-                <Route path="/users/login" element={<Login />} />
-                <Route path="/users/signup" element={<Signup />} />
-                <Route path="/users/signup/email" element={<SignupEmail />} />
-                <Route path="/users/find-password" element={<PasswordFind />} />
-            </Route>
-            
-            <Route element={<PrivateRoute/>} >
-                <Route path="/users/my-page" element={<MyPage />} />
-                <Route path="/users/check-password" element={<PasswordCheck />} />
-                <Route path="/users/edit" element={<EditProfile />} />
-                <Route path="/users/withdraw" element={<Withdraw />} />
-                <Route path="/points/history" element={<PointTransactionPage />} />
-                <Route path="/library/interests" element={<InterestContents />} />
-                <Route path="/library/recent-view" element={<ReadingHistoryContents />} />
-                <Route path="/library/my-comments" element={<MyComments />}  />
-                <Route path="/creators/register" element={<CreatorRegister/>}  />
-                <Route path="/mock-verify" element={<MockVerify/>}  />
-                <Route path="/webnovels/:contentId/viewer/:episodeId" element={<WebnovelViewer />} />
-                <Route path="/webtoons/:contentId/viewer/:episodeId" element={<WebtoonViewer />} />
-                <Route path="/:contentType/:contentId/viewer/:episodeId/comments" element={<EpisodeCommentsPage />} />
-                <Route path="/points/charge" element={<PointCharge />} />
-                <Route path="/payment/success" element={<PaymentSuccess/>} />
-                <Route path="/payment/fail" element={<PaymentFail/>} />
-            </Route>
+            <GlobalStyle />
+            {!hideHeaderFooter && !creatorHeader && <Header></Header>}
+            {!hideHeaderFooter && creatorHeader && <CreatorHeader />}
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/webnovels" element={<WebnovelHome />} />
+                <Route path="/webtoons" element={<WebtoonHome />} />
+                <Route path="/webnovels/new" element={<NewContents contentType="WEBNOVEL" />} />
+                <Route path="/webtoons/new" element={<NewContents contentType="WEBTOON" />} />
+                <Route path="/contents/masterpiece" element={<MasterpieceContents contentType="ALL" />} />
+                <Route path="/webnovels/masterpiece" element={<MasterpieceContents contentType="WEBNOVEL" />} />
+                <Route path="/webtoons/masterpiece" element={<MasterpieceContents contentType="WEBTOON" />} />
+                <Route path="/webnovels/recommend/by-keyword" element={<RecommendKeywordContents contentType="WEBNOVEL" />} />
+                <Route path="/webtoons/recommend/by-keyword" element={<RecommendKeywordContents contentType="WEBTOON" />} />
+                <Route path="/webnovels/:contentId" element={<WebnovelDetailPage />} />
+                <Route path="/webtoons/:contentId" element={<WebtoonDetailPage />} />
+                <Route path="/search/keyword" element={<KeywordSearch />} />
+                <Route path="/search" element={<TitleCreatorSearch />} />
+                <Route path="/oauth/callback" element={< OAuthRedirectHandler />} />
+                <Route element={<PublicOnlyRoute />} >
+                    <Route path="/users/login" element={<Login />} />
+                    <Route path="/users/signup" element={<Signup />} />
+                    <Route path="/users/signup/email" element={<SignupEmail />} />
+                    <Route path="/users/find-password" element={<PasswordFind />} />
+                </Route>
 
-            <Route element={<RoleRoute allowedRoles={["ROLE_CREATOR"]}/>}>
-                <Route path="/creators/dashboard" element={<CreatorDashbord/>}  />
-            </Route>
-            
-            
-        </Routes>
-        {!hideHeaderFooter && <Footer></Footer>}
+                <Route element={<PrivateRoute />} >
+                    <Route path="/users/my-page" element={<MyPage />} />
+                    <Route path="/users/check-password" element={<PasswordCheck />} />
+                    <Route path="/users/edit" element={<EditProfile />} />
+                    <Route path="/users/withdraw" element={<Withdraw />} />
+                    <Route path="/points/history" element={<PointTransactionPage />} />
+                    <Route path="/library/interests" element={<InterestContents />} />
+                    <Route path="/library/recent-view" element={<ReadingHistoryContents />} />
+                    <Route path="/library/my-comments" element={<MyComments />} />
+                    <Route path="/creators/register" element={<CreatorRegister />} />
+                    <Route path="/mock-verify" element={<MockVerify />} />
+                    <Route path="/webnovels/:contentId/viewer/:episodeId" element={<WebnovelViewer />} />
+                    <Route path="/webtoons/:contentId/viewer/:episodeId" element={<WebtoonViewer />} />
+                    <Route path="/:contentType/:contentId/viewer/:episodeId/comments" element={<EpisodeCommentsPage />} />
+                    <Route path="/points/charge" element={<PointCharge />} />
+                    <Route path="/payment/success" element={<PaymentSuccess />} />
+                    <Route path="/payment/fail" element={<PaymentFail />} />
+                </Route>
+
+                <Route element={<RoleRoute allowedRoles={["ROLE_CREATOR"]} />}>
+                    <Route path="/creators/dashboard" element={<CreatorDashbord />} />
+                    <Route path="/creators/contents/new" element={<NewContentPage />} />
+                </Route>
+
+
+            </Routes>
+            {!hideHeaderFooter && <Footer></Footer>}
         </>
     )
 }
