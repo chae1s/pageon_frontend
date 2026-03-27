@@ -43,3 +43,18 @@ export interface CreatorContentDetail {
     cover: string;
     serialDay: string;
 }
+
+export interface CreatorDeleteContent {
+    contentId: number;
+    contentTitle: string;
+    contentType: string;
+}
+
+export interface CreatorDeletionList {
+    id: number;
+    contentTitle: string;
+    deleteReason: string;
+    reasonDetail: string;
+    requestedAt: string;
+    deleteStatus: string;
+}
