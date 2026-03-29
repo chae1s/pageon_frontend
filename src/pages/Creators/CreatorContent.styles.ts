@@ -728,6 +728,7 @@ export const CreatorSimpleSortGroup = styled.div`
     padding: 10px 8px;
 `
 
+
 /* Delete Content Request Styles */
 export const DeleteInfoBox = styled.div`
     padding: 10px 0;
@@ -943,3 +944,4 @@ export const DeleteDetailLabel = styled.div`
     margin-bottom: 6px;
     font-size: 13px;
 `;
+
