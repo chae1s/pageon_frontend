@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const CreatorTitle = styled.h2`
-    font-size: 24px;
+    font-size: 1.3rem;
     font-weight: 700;
     margin-bottom: 24px;
 `;
@@ -436,8 +436,8 @@ export const ContentSeparate = styled.span`
 
 `;
 
-export const ContentStatus = styled.span`
-
+export const ContentStatus = styled.span<{ $status?: string }>`
+    color: ${({ $status }) => ($status === 'DELETING' ? '#FC5858' : 'inherit')};
 `;
 
 export const CardTitle = styled.h3`
@@ -728,6 +728,218 @@ export const CreatorSimpleSortGroup = styled.div`
     padding: 10px 8px;
 `
 
+/* Delete Content Request Styles */
+export const DeleteInfoBox = styled.div`
+    padding: 10px 0;
+    margin-bottom: 30px;
+`;
 
+export const DeleteInfoItem = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    color: #444;
+    &:not(:last-child) {
+        margin-bottom: 10px;
+    }
+`;
 
+export const DeleteInfoLabel = styled.span`
+    font-weight: 600;
+    color: #222;
+    min-width: 80px;
+`;
 
+export const DeleteWarningBox = styled.div`
+    padding: 16px 20px;
+    background-color: #fff9f9;
+    border: 1px solid #ffebeb;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+`;
+
+export const DeleteWarningIcon = styled.span`
+    color: #e53935;
+    font-size: 18px;
+    line-height: 1;
+    margin-top: 2px;
+`;
+
+export const DeleteWarningText = styled.div`
+    color: #e53935;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+`;
+
+export const DeleteReasonGrid = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+`;
+
+export const DeleteReasonLabel = styled.label<{ $selected: boolean }>`
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border: 1px solid ${({ $selected }) => ($selected ? "#528efa" : "#e0e0e0")};
+    background-color: ${({ $selected }) => ($selected ? "#f0f6ff" : "#fff")};
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: ${({ $selected }) => ($selected ? "600" : "400")};
+    color: ${({ $selected }) => ($selected ? "#528efa" : "#666")};
+
+    input {
+        display: none;
+    }
+
+    &:hover {
+        border-color: #528efa;
+    }
+`;
+
+export const DeleteTextArea = styled(TextArea)`
+    min-height: 160px;
+    margin-top: 10px;
+`;
+
+export const DeleteAgreementWrap = styled.label`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+    margin: 10px 0 10px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+
+    input {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+`;
+
+/* Delete Request List Styles */
+export const DeleteTable = styled.table`
+    width: 100%;
+    margin-bottom: 40px;
+    border-collapse: collapse;
+`;
+
+export const DeleteColTitle = styled.col`
+    width: auto;
+`;
+
+export const DeleteColReason = styled.col`
+    width: 220px;
+`;
+
+export const DeleteColDate = styled.col`
+    width: 150px;
+    text-align: center;
+`;
+
+export const DeleteColStatus = styled.col`
+    width: 140px;
+`;
+
+export const DeleteColAction = styled.col`
+    width: 120px;
+`;
+
+export const DeleteTheadTr = styled.tr`
+    border-bottom: solid 1px #e5e5e5;
+    font-size: 13px;
+    cursor: default;
+`;
+
+export const DeleteTh = styled.th<{ $align?: string }>`
+    padding: 12px 15px;
+    text-align: ${({ $align }) => $align || 'left'};
+    font-weight: 600;
+    color: #333;
+`;
+
+export const DeleteTbodyTr = styled.tr<{ $isOpen?: boolean }>`
+    border-bottom: ${({ $isOpen }) => ($isOpen ? 'none' : 'solid 1px #e6e6e6')};
+`;
+
+export const DeleteTd = styled.td<{ $align?: string; $bold?: boolean }>`
+    padding: ${({ $align }) => ($align === 'center' ? '0' : '13px 15px 12px 14px')};
+    font-size: 14px;
+    line-height: 14px;
+    text-align: ${({ $align }) => $align || 'left'};
+    font-weight: ${({ $bold }) => ($bold ? "600" : "400")};
+    color: #444;
+    vertical-align: middle;
+`;
+
+export const DeleteStatusBadge = styled.span<{ $status: string }>`
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    min-width: 60px;
+    
+    ${({ $status }) => {
+        switch ($status) {
+            case 'PENDING':
+                return `background-color: #fff4e5; color: #ff9800;`;
+            case 'COMPLETED':
+                return `background-color: #e8f5e9; color: #4caf50;`;
+            case 'REJECTED':
+                return `background-color: #ffebee; color: #f44336;`;
+            case 'CANCELED':
+                return `background-color: #f5f5f5; color: #9e9e9e;`;
+            default:
+                return `background-color: #f5f5f5; color: #444;`;
+        }
+    }}
+`;
+
+export const RequestCancelBtn = styled.button`
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background: #fff;
+    color: #666;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background: #fdfdfd;
+        color: #333;
+    }
+`;
+
+export const DeleteDetailTr = styled.tr`
+    border-bottom: solid 1px #e6e6e6;
+`;
+
+export const DeleteDetailTd = styled.td`
+    padding: 15px 20px 20px 25px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #555;
+    vertical-align: top;
+`;
+
+export const DeleteDetailLabel = styled.div`
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 6px;
+    font-size: 13px;
+`;

@@ -7,6 +7,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { CreatorContentList } from "../../types/Creator";
 import { Pagination } from "../../types/Page";
 import PageNavigator from "../../components/Pagination/PageNavigator";
+import { formatKorean } from "../../utils/formatContentType";
 
 function MyContentList() {
 
@@ -49,10 +50,6 @@ function MyContentList() {
         fetchMyContentList();
     }, [sort, page, seriesStatus]);
 
-    const getContentTypeLabel = (type: string) =>
-        type === 'WEBTOON' || type === 'webtoons' ? '웹툰' :
-            type === 'WEBNOVEL' || type === 'webnovels' ? '웹소설' : type;
-
     const dayKoMap: Record<string, string> = {
         MONDAY: "월요일", TUESDAY: "화요일", WEDNESDAY: "수요일", THURSDAY: "목요일", FRIDAY: "금요일", SATURDAY: "토요일", SUNDAY: "일요일",
     };
@@ -63,7 +60,8 @@ function MyContentList() {
         REST: "휴재",
         PENDING: "심사대기",
         PUBLISHED: "승인됨",
-        REJECTED: "반려됨"
+        REJECTED: "반려됨",
+        DELETING: "삭제요청중"
     };
 
     const handlePageChange = (newPage: number) => {
@@ -105,7 +103,7 @@ function MyContentList() {
                                             <S.CardTitle>{content.contentTitle}</S.CardTitle>
                                             <S.ContentMetaRow>
                                                 <S.ContentMetaItem>
-                                                    {getContentTypeLabel(content.contentType)}
+                                                    {formatKorean(content.contentType)}
                                                 </S.ContentMetaItem>
                                                 <S.ContentSeparate>ㆍ</S.ContentSeparate>
 
@@ -117,7 +115,7 @@ function MyContentList() {
                                                         <S.ContentSeparate>ㆍ</S.ContentSeparate>
                                                     </>
                                                 )}
-                                                <S.ContentStatus>
+                                                <S.ContentStatus $status={content.workStatus === "PUBLISHED" ? content.seriesStatus : content.workStatus}>
                                                     {statusMap[content.workStatus === "PUBLISHED" ? content.seriesStatus : content.workStatus] || ""}
                                                 </S.ContentStatus>
                                             </S.ContentMetaRow>
@@ -132,13 +130,11 @@ function MyContentList() {
                                                 <S.ContentActionLink onClick={() => navigate(`/creators/contents/${content.contentId}/update`)}>
                                                     수정
                                                 </S.ContentActionLink>
-                                                <S.ContentActionLink $danger onClick={() => {
-                                                    if (window.confirm('작품을 정말 삭제하시겠습니까?')) {
-                                                        alert('삭제 기능 연동 예정입니다.');
-                                                    }
-                                                }}>
-                                                    삭제
-                                                </S.ContentActionLink>
+                                                {(content.workStatus === "PUBLISHED" ? content.seriesStatus : content.workStatus) !== 'DELETING' && (
+                                                    <S.ContentActionLink $danger onClick={() => navigate(`/creators/contents/${content.contentId}/delete`)}>
+                                                        삭제
+                                                    </S.ContentActionLink>
+                                                )}
                                             </S.ContentActionWrap>
                                         </S.InfoTextWrap>
                                     </S.ContentInfoSection>

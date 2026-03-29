@@ -42,6 +42,8 @@ import NewContentPage from "./pages/Creators/NewContentPage";
 import MyContentList from "./pages/Creators/MyContentList";
 import UpdateContentPage from "./pages/Creators/UpdateContentPage";
 import UpdateContentChoicePage from "./pages/Creators/UpdateContentChoicePage";
+import DeleteRequestPage from "./pages/Creators/DeleteRequestPage";
+import DeleteContentList from "./pages/Creators/DeleteContentList";
 
 function Router() {
     const location = useLocation();
@@ -112,6 +114,8 @@ function Router() {
                     <Route path="/creators/contents/list" element={<MyContentList />} />
                     <Route path="/creators/contents/update" element={<UpdateContentChoicePage />} />
                     <Route path="/creators/contents/:contentId/update" element={<UpdateContentPage />} />
+                    <Route path="/creators/contents/:contentId/delete" element={<DeleteRequestPage />} />
+                    <Route path="/creators/contents/delete" element={<DeleteContentList />} />
                 </Route>
 
 
