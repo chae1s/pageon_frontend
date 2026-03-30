@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CreatorSidebar from "../../components/Sidebars/CreatorSidebar";
-import { MainContainer, SidebarMain, SidebarRightWrap } from "../../styles/Layout.styles";
+import { MainContainer, NoSidebarMain, SidebarMain, SidebarRightWrap } from "../../styles/Layout.styles";
 import * as S from "./CreatorContent.styles";
 import { CreatorDeletionList } from "../../types/Creator";
 import api from "../../api/axiosInstance";
@@ -69,74 +69,72 @@ function DeleteContentList() {
 
     return (
         <MainContainer>
-            <SidebarMain>
-                <CreatorSidebar />
-                <SidebarRightWrap>
-                    <S.CreatorTitle>삭제 요청 작품</S.CreatorTitle>
+            <NoSidebarMain>
 
-                    {deletionList.length === 0 ? (
-                        <div style={{ textAlign: 'center', padding: '50px 0', color: '#888' }}>
-                            삭제 요청한 작품이 없습니다.
-                        </div>
-                    ) : (
-                        <S.DeleteTable>
-                            <colgroup>
-                                <S.DeleteColTitle />
-                                <S.DeleteColReason />
-                                <S.DeleteColDate />
-                                <S.DeleteColStatus />
-                                <S.DeleteColAction />
-                            </colgroup>
-                            <thead>
-                                <S.DeleteTheadTr>
-                                    <S.DeleteTh>작품명</S.DeleteTh>
-                                    <S.DeleteTh>삭제 사유</S.DeleteTh>
-                                    <S.DeleteTh $align="center">신청일</S.DeleteTh>
-                                    <S.DeleteTh $align="center">상태</S.DeleteTh>
-                                    <S.DeleteTh $align="center">관리</S.DeleteTh>
-                                </S.DeleteTheadTr>
-                            </thead>
-                            <tbody>
-                                {deletionList.map((item) => (
-                                    <React.Fragment key={item.id}>
-                                        <S.DeleteTbodyTr
-                                            onClick={() => handleRowClick(item.id)}
-                                            style={{ cursor: 'pointer' }}
-                                            $isOpen={openRequestId === item.id}
-                                        >
-                                            <S.DeleteTd style={{ fontWeight: 600 }}>{item.contentTitle}</S.DeleteTd>
-                                            <S.DeleteTd>{reasonMap[item.deleteReason] || item.deleteReason}</S.DeleteTd>
-                                            <S.DeleteTd $align="center">{formatDate(item.requestedAt)}</S.DeleteTd>
-                                            <S.DeleteTd $align="center">
-                                                <S.DeleteStatusBadge $status={item.deleteStatus}>
-                                                    {statusMap[item.deleteStatus] || item.deleteStatus}
-                                                </S.DeleteStatusBadge>
-                                            </S.DeleteTd>
-                                            <S.DeleteTd $align="center">
-                                                {item.deleteStatus === 'PENDING' && (
-                                                    <S.RequestCancelBtn onClick={(e) => handleCancelRequest(e, item.id)}>
-                                                        요청 취소
-                                                    </S.RequestCancelBtn>
-                                                )}
-                                            </S.DeleteTd>
-                                        </S.DeleteTbodyTr>
-                                        {openRequestId === item.id && (
-                                            <S.DeleteDetailTr>
-                                                <S.DeleteDetailTd colSpan={5}>
-                                                    <S.DeleteDetailLabel>상세 사유</S.DeleteDetailLabel>
-                                                    <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
-                                                        {item.reasonDetail || "작성된 상세 사유가 없습니다."}
-                                                    </div>
-                                                </S.DeleteDetailTd>
-                                            </S.DeleteDetailTr>
-                                        )}
-                                    </React.Fragment>
-                                ))}
-                            </tbody>
-                        </S.DeleteTable>
-                    )}
-                </SidebarRightWrap>
-            </SidebarMain>
+                <S.CreatorTitle>삭제 요청 작품</S.CreatorTitle>
+
+                {deletionList.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '50px 0', color: '#888' }}>
+                        삭제 요청한 작품이 없습니다.
+                    </div>
+                ) : (
+                    <S.DeleteTable>
+                        <colgroup>
+                            <S.DeleteColTitle />
+                            <S.DeleteColReason />
+                            <S.DeleteColDate />
+                            <S.DeleteColStatus />
+                            <S.DeleteColAction />
+                        </colgroup>
+                        <thead>
+                            <S.DeleteTheadTr>
+                                <S.DeleteTh>작품명</S.DeleteTh>
+                                <S.DeleteTh>삭제 사유</S.DeleteTh>
+                                <S.DeleteTh $align="center">신청일</S.DeleteTh>
+                                <S.DeleteTh $align="center">상태</S.DeleteTh>
+                                <S.DeleteTh $align="center">관리</S.DeleteTh>
+                            </S.DeleteTheadTr>
+                        </thead>
+                        <tbody>
+                            {deletionList.map((item) => (
+                                <React.Fragment key={item.id}>
+                                    <S.DeleteTbodyTr
+                                        onClick={() => handleRowClick(item.id)}
+                                        style={{ cursor: 'pointer' }}
+                                        $isOpen={openRequestId === item.id}
+                                    >
+                                        <S.DeleteTd style={{ fontWeight: 600 }}>{item.contentTitle}</S.DeleteTd>
+                                        <S.DeleteTd>{reasonMap[item.deleteReason] || item.deleteReason}</S.DeleteTd>
+                                        <S.DeleteTd $align="center">{formatDate(item.requestedAt)}</S.DeleteTd>
+                                        <S.DeleteTd $align="center">
+                                            <S.DeleteStatusBadge $status={item.deleteStatus}>
+                                                {statusMap[item.deleteStatus] || item.deleteStatus}
+                                            </S.DeleteStatusBadge>
+                                        </S.DeleteTd>
+                                        <S.DeleteTd $align="center">
+                                            {item.deleteStatus === 'PENDING' && (
+                                                <S.RequestCancelBtn onClick={(e) => handleCancelRequest(e, item.id)}>
+                                                    요청 취소
+                                                </S.RequestCancelBtn>
+                                            )}
+                                        </S.DeleteTd>
+                                    </S.DeleteTbodyTr>
+                                    {openRequestId === item.id && (
+                                        <S.DeleteDetailTr>
+                                            <S.DeleteDetailTd colSpan={5}>
+                                                <S.DeleteDetailLabel>상세 사유</S.DeleteDetailLabel>
+                                                <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
+                                                    {item.reasonDetail || "작성된 상세 사유가 없습니다."}
+                                                </div>
+                                            </S.DeleteDetailTd>
+                                        </S.DeleteDetailTr>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </tbody>
+                    </S.DeleteTable>
+                )}
+            </NoSidebarMain>
         </MainContainer>
     );
 }

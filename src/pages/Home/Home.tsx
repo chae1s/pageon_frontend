@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { MainContainer, NoSidebarMain } from "../../styles/Layout.styles";
 import * as H from "./Home.styles"
-import { SimpleContent, RankingBook } from "../../types/Content";
+import { SimpleContent, RankingContent } from "../../types/Content";
 import RankingContentList from "../../components/Contents/RankingContentList";
 import ThumbnailContentList from "../../components/Contents/ThumbnailContentList";
 import api from "../../api/axiosInstance";
@@ -15,7 +15,7 @@ function Home() {
 
     const [webtoonKeywordContents, setWebtoonKeywordContents] = useState<SimpleContent[]>([]);
     const [webtoonKeywordName, setWebtoonKeywordName] = useState<string>("");
-    const [rankingContents, setRankingContents] = useState<SimpleContent[]>([]);
+    const [rankingContents, setRankingContents] = useState<RankingContent[]>([]);
 
     useEffect(() => {
         async function fetchData() {

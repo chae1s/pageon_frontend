@@ -5,7 +5,7 @@ export const Container = styled.div`
     width: 100%;
 `;
 
-export const DateInputWrap = styled.div<{ $isOpen: boolean }>`
+export const DateInputWrap = styled.div<{ $isOpen: boolean; $disabled?: boolean }>`
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -14,12 +14,13 @@ export const DateInputWrap = styled.div<{ $isOpen: boolean }>`
     border: 1px solid ${({ $isOpen }) => ($isOpen ? "#69a3ff" : "#ccc")};
     border-radius: 4px;
     padding: 0 12px;
-    background: #fff;
-    cursor: pointer;
+    background: ${({ $disabled }) => ($disabled ? "#f5f5f5" : "#fff")};
+    cursor: ${({ $disabled }) => ($disabled ? "default" : "pointer")};
+    pointer-events: ${({ $disabled }) => ($disabled ? "none" : "auto")};
     transition: border-color 0.2s;
 
     &:hover {
-        border-color: #69a3ff;
+        border-color: ${({ $disabled }) => ($disabled ? "#ccc" : "#69a3ff")};
     }
 `;
 
@@ -114,9 +115,7 @@ export const DayCell = styled.button<{
     $isCurrentMonth: boolean 
 }>`
     background: ${({ $isSelected }) => ($isSelected ? "#528efa" : "transparent")};
-    color: ${({ $isSelected, $isCurrentMonth }) => 
-        $isSelected ? "#fff" : 
-        $isCurrentMonth ? "#333" : "#ddd"};
+    color: ${({ $isSelected }) => ($isSelected ? "#fff" : "#333")};
     border: none;
     border-radius: 6px;
     height: 38px;

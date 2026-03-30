@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import CreatorSidebar from "../../components/Sidebars/CreatorSidebar";
-import { MainContainer, SidebarMain, SidebarRightWrap, SortBtn } from "../../styles/Layout.styles";
+import { MainContainer, NoSidebarMain, SidebarMain, SidebarRightWrap, SortBtn } from "../../styles/Layout.styles";
+import CustomSelect from "../../components/Common/CustomSelect";
 import * as S from "./CreatorContent.styles";
 import api from "../../api/axiosInstance";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { CreatorContentList } from "../../types/Creator";
 import { Pagination } from "../../types/Page";
 import PageNavigator from "../../components/Pagination/PageNavigator";
-import { formatKorean } from "../../utils/formatContentType";
+import { formatKorean, formatUrl } from "../../utils/formatContentType";
 
 function MyContentList() {
 
@@ -19,6 +20,11 @@ function MyContentList() {
     const sort = searchParams.get("sort") || "update";
     const seriesStatus = searchParams.get("seriesStatus") || "ONGOING";
     const page = parseInt(searchParams.get("page") || "0", 10);
+
+    const sortOptions = [
+        { label: "연재등록 순", value: "update" },
+        { label: "에피소드 업로드 순", value: "episode" }
+    ];
 
     const handleParamClick = (newKey: string, newValue: string) => {
         const newParams = new URLSearchParams(searchParams);
@@ -34,11 +40,8 @@ function MyContentList() {
                 const params: any = {
                     sort: sort,
                     page: page,
+                    seriesStatus: seriesStatus
                 };
-                if (seriesStatus !== "ALL") {
-                    params.seriesStatus = seriesStatus;
-                }
-
                 const response = await api.get("/creators/contents", { params });
 
                 setCreatorContentList(response.data.content);
@@ -72,27 +75,30 @@ function MyContentList() {
 
     return (
         <MainContainer>
-            <SidebarMain>
-                <CreatorSidebar />
-                <SidebarRightWrap>
-                    <S.CreatorTitle>내 작품 목록</S.CreatorTitle>
+            <NoSidebarMain>
+                <S.CreatorTitle>내 작품 목록</S.CreatorTitle>
 
-                    <S.CreatorFilterSortRow>
-                        <S.CreatorFilterWrap>
-                            <SortBtn $active={seriesStatus === "ONGOING"} onClick={() => handleParamClick("seriesStatus", "ONGOING")}>연재중</SortBtn>
-                            <SortBtn $active={seriesStatus === "REST"} onClick={() => handleParamClick("seriesStatus", "REST")}>휴재</SortBtn>
-                            <SortBtn $active={seriesStatus === "COMPLETED"} onClick={() => handleParamClick("seriesStatus", "COMPLETED")}>완결</SortBtn>
-                        </S.CreatorFilterWrap>
+                <S.CreatorFilterSortRow>
+                    <S.CreatorFilterWrap>
+                        <SortBtn $active={seriesStatus === "ONGOING"} onClick={() => handleParamClick("seriesStatus", "ONGOING")}>연재중</SortBtn>
+                        <SortBtn $active={seriesStatus === "REST"} onClick={() => handleParamClick("seriesStatus", "REST")}>휴재</SortBtn>
+                        <SortBtn $active={seriesStatus === "COMPLETED"} onClick={() => handleParamClick("seriesStatus", "COMPLETED")}>완결</SortBtn>
+                    </S.CreatorFilterWrap>
 
-                        <S.CreatorSortWrap>
-                            <SortBtn $active={sort === "update"} onClick={() => handleParamClick("sort", "update")}>연재등록 순</SortBtn>
-                            <SortBtn $active={sort === "episode"} onClick={() => handleParamClick("sort", "episode")}>에피소드 업로드 순</SortBtn>
-                        </S.CreatorSortWrap>
-                    </S.CreatorFilterSortRow>
+                    <S.CreatorSortWrap>
+                        <CustomSelect
+                            width="170px"
+                            options={sortOptions}
+                            value={sort}
+                            onChange={(val) => handleParamClick("sort", val)}
+                        />
+                    </S.CreatorSortWrap>
+                </S.CreatorFilterSortRow>
 
-                    {creatorContentList.length === 0 ? (
-                        <S.EmptyState>등록된 작품이 없습니다. 새로운 작품을 등록해보세요!</S.EmptyState>
-                    ) : (
+                {creatorContentList.length === 0 ? (
+                    <S.EmptyState>등록된 작품이 없습니다. 새로운 작품을 등록해보세요!</S.EmptyState>
+                ) : (
+                    <>
                         <S.ListContainer>
                             {creatorContentList.map(content => (
                                 <S.ContentCard key={content.contentId}>
@@ -115,9 +121,21 @@ function MyContentList() {
                                                         <S.ContentSeparate>ㆍ</S.ContentSeparate>
                                                     </>
                                                 )}
-                                                <S.ContentStatus $status={content.workStatus === "PUBLISHED" ? content.seriesStatus : content.workStatus}>
-                                                    {statusMap[content.workStatus === "PUBLISHED" ? content.seriesStatus : content.workStatus] || ""}
-                                                </S.ContentStatus>
+                                                {(() => {
+                                                    const displayStatus = content.workStatus === "PUBLISHED" ? content.seriesStatus : content.workStatus;
+                                                    return (
+                                                        <S.ContentStatus
+                                                            $status={displayStatus}
+                                                            onClick={() => {
+                                                                if (displayStatus === 'DELETING') {
+                                                                    navigate('/creators/contents/delete');
+                                                                }
+                                                            }}
+                                                        >
+                                                            {statusMap[displayStatus] || ""}
+                                                        </S.ContentStatus>
+                                                    );
+                                                })()}
                                             </S.ContentMetaRow>
                                             {content.keywords && content.keywords.length > 0 && (
                                                 <S.ContentKeywordWrap>
@@ -127,9 +145,11 @@ function MyContentList() {
                                                 </S.ContentKeywordWrap>
                                             )}
                                             <S.ContentActionWrap>
-                                                <S.ContentActionLink onClick={() => navigate(`/creators/contents/${content.contentId}/update`)}>
-                                                    수정
-                                                </S.ContentActionLink>
+                                                {(content.workStatus === "PUBLISHED" ? content.seriesStatus : content.workStatus) !== 'DELETING' && (
+                                                    <S.ContentActionLink onClick={() => navigate(`/creators/contents/${content.contentId}/edit`)}>
+                                                        수정
+                                                    </S.ContentActionLink>
+                                                )}
                                                 {(content.workStatus === "PUBLISHED" ? content.seriesStatus : content.workStatus) !== 'DELETING' && (
                                                     <S.ContentActionLink $danger onClick={() => navigate(`/creators/contents/${content.contentId}/delete`)}>
                                                         삭제
@@ -138,38 +158,17 @@ function MyContentList() {
                                             </S.ContentActionWrap>
                                         </S.InfoTextWrap>
                                     </S.ContentInfoSection>
-
-                                    {/* 우측: Episode Info (현재 가데이터) */}
-                                    <S.EpisodeInfoSection>
-                                        <S.EpisodeHeaderWrap>
-                                            <S.EpisodeSectionTitle>에피소드 업로드 보드</S.EpisodeSectionTitle>
-                                            <S.NewEpisodeButton onClick={() => alert('에피소드 작성으로 가기')}>
-                                                새 에피소드 쓰기
-                                            </S.NewEpisodeButton>
-                                        </S.EpisodeHeaderWrap>
-
-                                        <S.MockEpisodeItem>
-                                            <span>3화 - 어둠 속의 습격</span>
-                                            <span>2024-03-27</span>
-                                        </S.MockEpisodeItem>
-                                        <S.MockEpisodeItem>
-                                            <span>2화 - 밝혀지는 진실</span>
-                                            <span>2024-03-20</span>
-                                        </S.MockEpisodeItem>
-                                        <S.MockEpisodeItem>
-                                            <span>1화 - 새로운 시작</span>
-                                            <span>2024-03-13</span>
-                                        </S.MockEpisodeItem>
-                                    </S.EpisodeInfoSection>
                                 </S.ContentCard>
                             ))}
-                            {pageData && pageData.totalPages > 0 && (
-                                <PageNavigator pageData={pageData} handlePageChange={handlePageChange} />
-                            )}
                         </S.ListContainer>
-                    )}
-                </SidebarRightWrap>
-            </SidebarMain>
+                        {pageData && pageData.totalPages > 0 && (
+                            <S.PaginationWrap>
+                                <PageNavigator pageData={pageData} handlePageChange={handlePageChange} />
+                            </S.PaginationWrap>
+                        )}
+                    </>
+                )}
+            </NoSidebarMain>
         </MainContainer>
     )
 }

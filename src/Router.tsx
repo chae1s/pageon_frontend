@@ -7,6 +7,7 @@ import Home from "./pages/Home/Home"
 import Header from "./components/Headers/Header";
 import CreatorHeader from "./components/Headers/CreatorHeader";
 import Footer from "./components/Footer";
+import EpisodeUpdatePage from "./pages/Creators/EpisodeUpdatePage";
 import Login from "./pages/Users/Login";
 import Signup from "./pages/Users/Signup";
 import SignupEmail from "./pages/Users/SignupEmail";
@@ -15,14 +16,12 @@ import MyPage from "./pages/Users/MyPage";
 import PasswordCheck from "./pages/Users/PasswordCheck";
 import EditProfile from "./pages/Users/EditProfile";
 import Withdraw from "./pages/Users/Withdraw";
-import InterestContents from "./pages/Users/InterestContents";
-import ReadingHistoryContents from "./pages/Users/ReadingHistoryContents";
+import LibraryPage from "./pages/Users/LibraryPage";
 import MyComments from "./pages/Users/MyComments";
 import CreatorRegister from "./pages/Creators/CreatorRegister";
 import MockVerify from "./pages/Users/MockVerify";
 import CreatorDashbord from "./pages/Creators/CreatorDashbord";
-import WebnovelHome from "./pages/Home/WebnovelHome";
-import WebtoonHome from "./pages/Home/WebtoonHome";
+import ContentHome from "./pages/Home/ContentHome";
 import WebnovelDetailPage from "./pages/Contents/WebnovelDetailPage";
 import WebtoonDetailPage from "./pages/Contents/WebtoonDetailPage";
 import WebnovelViewer from "./pages/Contents/WebnovelViewer";
@@ -40,10 +39,16 @@ import PaymentFail from "./pages/Payments/PaymentFail";
 import OAuthRedirectHandler from "./pages/Users/OAuthRedirectHandler";
 import NewContentPage from "./pages/Creators/NewContentPage";
 import MyContentList from "./pages/Creators/MyContentList";
-import UpdateContentPage from "./pages/Creators/UpdateContentPage";
-import UpdateContentChoicePage from "./pages/Creators/UpdateContentChoicePage";
+import ContentUpdatePage from "./pages/Creators/ContentUpdatePage";
 import DeleteRequestPage from "./pages/Creators/DeleteRequestPage";
 import DeleteContentList from "./pages/Creators/DeleteContentList";
+import ContentDashboard from "./pages/Creators/ContentDashboard";
+import EpisodeRegistrationPage from "./pages/Creators/EpisodeRegistrationPage";
+import EpisodeDashboard from "./pages/Creators/EpisodeDashboard";
+import RevenueDashboard from "./pages/Creators/RevenueDashboard";
+import PayoutAccountPage from "./pages/Creators/PayoutAccountPage";
+import ContentDetailPage from "./pages/Creators/ContentDetailPage";
+import EpisodeDetailPage from "./pages/Creators/EpisodeDetailPage";
 
 function Router() {
     const location = useLocation();
@@ -68,8 +73,8 @@ function Router() {
             {!hideHeaderFooter && creatorHeader && <CreatorHeader />}
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/webnovels" element={<WebnovelHome />} />
-                <Route path="/webtoons" element={<WebtoonHome />} />
+                <Route path="/webnovels" element={<ContentHome />} />
+                <Route path="/webtoons" element={<ContentHome />} />
                 <Route path="/webnovels/new" element={<NewContents contentType="WEBNOVEL" />} />
                 <Route path="/webtoons/new" element={<NewContents contentType="WEBTOON" />} />
                 <Route path="/contents/masterpiece" element={<MasterpieceContents contentType="ALL" />} />
@@ -95,8 +100,8 @@ function Router() {
                     <Route path="/users/edit" element={<EditProfile />} />
                     <Route path="/users/withdraw" element={<Withdraw />} />
                     <Route path="/points/history" element={<PointTransactionPage />} />
-                    <Route path="/library/interests" element={<InterestContents />} />
-                    <Route path="/library/recent-view" element={<ReadingHistoryContents />} />
+                    <Route path="/library/interests" element={<LibraryPage />} />
+                    <Route path="/library/history" element={<LibraryPage />} />
                     <Route path="/library/my-comments" element={<MyComments />} />
                     <Route path="/creators/register" element={<CreatorRegister />} />
                     <Route path="/mock-verify" element={<MockVerify />} />
@@ -112,10 +117,19 @@ function Router() {
                     <Route path="/creators/dashboard" element={<CreatorDashbord />} />
                     <Route path="/creators/contents/new" element={<NewContentPage />} />
                     <Route path="/creators/contents/list" element={<MyContentList />} />
-                    <Route path="/creators/contents/update" element={<UpdateContentChoicePage />} />
-                    <Route path="/creators/contents/:contentId/update" element={<UpdateContentPage />} />
+                    <Route path="/creators/contents/:contentId" element={<ContentDetailPage />} />
+                    <Route path="/creators/contents/:contentId/edit" element={<ContentUpdatePage />} />
                     <Route path="/creators/contents/:contentId/delete" element={<DeleteRequestPage />} />
                     <Route path="/creators/contents/delete" element={<DeleteContentList />} />
+                    <Route path="/creators/contents/dashboard" element={<ContentDashboard />} />
+                    <Route path="/creators/webnovels/:contentId/episodes/new" element={<EpisodeRegistrationPage />} />
+                    <Route path="/creators/webtoons/:contentId/episodes/new" element={<EpisodeRegistrationPage />} />
+                    <Route path="/creators/contents/episodes/dashboard" element={<EpisodeDashboard />} />
+                    <Route path="/creators/webnovels/:contentId/episodes/:episodeId" element={<EpisodeDetailPage />} />
+                    <Route path="/creators/webtoons/:contentId/episodes/:episodeId" element={<EpisodeDetailPage />} />
+                    <Route path="/creators/:type/:contentId/episodes/:episodeId/edit" element={<EpisodeUpdatePage />} />
+                    <Route path="/creators/revenue/dashboard" element={<RevenueDashboard />} />
+                    <Route path="/creators/revenue/account" element={<PayoutAccountPage />} />
                 </Route>
 
 

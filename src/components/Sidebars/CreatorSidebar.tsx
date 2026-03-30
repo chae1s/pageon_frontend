@@ -10,6 +10,10 @@ function CreatorSidebar() {
     const isUpdateContentActive = location.pathname === "/creators/contents/update" ||
         /^\/creators\/contents\/\d+\/update$/.test(location.pathname);
 
+    // 에피소드 작성 페이지 경로 정규식 검사 
+    const isEpisodeWriteActive = location.pathname === "/creators/contents/episodes/new" ||
+        /^\/creators\/(webnovels|webtoons)\/\d+\/episodes\/new$/.test(location.pathname);
+
     return (
         <S.SidebarContainser>
             <S.SidebarMainLink to={"/creators/dashboard"}>대시보드</S.SidebarMainLink>
@@ -45,13 +49,18 @@ function CreatorSidebar() {
                             <S.SidebarNavTitle>에피소드 관리</S.SidebarNavTitle>
                             <S.SidebarNavItemUl>
                                 <S.SidebarNavItemLi>
-                                    <S.SidebarNavLink to={"/"} >에피소드 작성</S.SidebarNavLink>
+                                    <S.SidebarNavLink
+                                        to={"/creators/contents/episodes/new"}
+                                        className={isEpisodeWriteActive ? "active" : ""}
+                                    >
+                                        에피소드 작성
+                                    </S.SidebarNavLink>
                                 </S.SidebarNavItemLi>
                                 <S.SidebarNavItemLi>
                                     <S.SidebarNavLink to={"/"}>에피소드 수정</S.SidebarNavLink>
                                 </S.SidebarNavItemLi>
                                 <S.SidebarNavItemLi>
-                                    <S.SidebarNavLink to={"/library/my-comments"}>에피소드 관리</S.SidebarNavLink>
+                                    <S.SidebarNavLink to={"/creators/contents/episodes/dashboard"}>에피소드 관리</S.SidebarNavLink>
                                 </S.SidebarNavItemLi>
                             </S.SidebarNavItemUl>
                         </S.SidebarNavSectionLi>

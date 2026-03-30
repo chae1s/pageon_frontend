@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import * as S from "../Styles/Sidebar.styles";
-import { Link, useNavigate, NavLink} from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 import { styled } from "styled-components";
 import { useAuth } from "../../context/AuthContext";
 
@@ -28,7 +28,7 @@ function Sidebar() {
             navigate("/users/edit");
         }
     }
-    const {roles} = useAuth();
+    const { roles } = useAuth();
 
     return (
         <S.SidebarContainser>
@@ -36,21 +36,21 @@ function Sidebar() {
             <aside>
                 <S.SidebarNav>
                     <S.SidebarNavSectionUl>
-                        <S.SidebarNavSectionLi last = {false}>
+                        <S.SidebarNavSectionLi last={false}>
                             <S.SidebarNavTitle>책</S.SidebarNavTitle>
                             <S.SidebarNavItemUl>
                                 <S.SidebarNavItemLi>
                                     <S.SidebarNavLink to={"/library/interests"} className="sidebar-nav-link">관심 작품</S.SidebarNavLink>
                                 </S.SidebarNavItemLi>
                                 <S.SidebarNavItemLi>
-                                    <S.SidebarNavLink to={"/library/recent-view"} className="sidebar-nav-link">최근 읽은 작품</S.SidebarNavLink>
+                                    <S.SidebarNavLink to={"/library/history"} className="sidebar-nav-link">최근 읽은 작품</S.SidebarNavLink>
                                 </S.SidebarNavItemLi>
                                 <S.SidebarNavItemLi>
                                     <S.SidebarNavLink to={"/library/my-comments"} className="sidebar-nav-link">내가 쓴 댓글</S.SidebarNavLink>
                                 </S.SidebarNavItemLi>
                             </S.SidebarNavItemUl>
                         </S.SidebarNavSectionLi>
-                        <S.SidebarNavSectionLi last = {false}>
+                        <S.SidebarNavSectionLi last={false}>
                             <S.SidebarNavTitle>내 정보</S.SidebarNavTitle>
                             <S.SidebarNavItemUl>
                                 <S.SidebarNavItemLi>
@@ -64,7 +64,7 @@ function Sidebar() {
                                 </S.SidebarNavItemLi>
                             </S.SidebarNavItemUl>
                         </S.SidebarNavSectionLi>
-                        <S.SidebarNavSectionLi last = {true}>
+                        <S.SidebarNavSectionLi last={true}>
                             <S.SidebarNavTitle>구매</S.SidebarNavTitle>
                             <S.SidebarNavItemUl>
                                 <S.SidebarNavItemLi>
@@ -78,7 +78,7 @@ function Sidebar() {
                     </S.SidebarNavSectionUl>
                     <SidebarCreatorLinkWrap>
                         {roles.includes("ROLE_CREATOR") ? (
-                            <Link to={"/creators/dashboard"}>작가 페이지로 이동하기</Link>
+                            <Link to={"/creators/contents/dashboard"}>작가 페이지로 이동하기</Link>
                         ) : (
                             <Link to={"/creators/register"}>작가 등록하기</Link>
                         )}

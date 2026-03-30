@@ -17,9 +17,10 @@ interface DatePickerProps {
     onChange: (date: string) => void;
     placeholder?: string;
     disabledDate?: (date: dayjs.Dayjs) => boolean;
+    disabled?: boolean;
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeholder = "날짜를 선택해 주세요", disabledDate }) => {
+const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeholder = "날짜를 선택해 주세요", disabledDate, disabled }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(dayjs(value || undefined));
     const containerRef = useRef<HTMLDivElement>(null);
@@ -73,7 +74,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, placeholder = 
 
     return (
         <S.Container ref={containerRef}>
-            <S.DateInputWrap $isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
+            <S.DateInputWrap $isOpen={isOpen} $disabled={disabled} onClick={() => !disabled && setIsOpen(!isOpen)}>
                 <S.DateText $hasValue={!!value}>{displayValue}</S.DateText>
                 <S.IconWrap>
                     <CalendarIcon />

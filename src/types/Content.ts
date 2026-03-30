@@ -14,13 +14,13 @@ export interface SimpleContent {
     totalRatingCount: number;
 }
 
-export interface RankingBook {
-    id: number;
-    title: string;
+export interface RankingContent {
+    contentId: number;
+    contentTitle: string;
     author: string;
     cover: string;
-    rating: number;
-    ratingCount: number;
+    totalAverageRating: number;
+    totalRatingCount: number;
     contentType: string;
 }
 
@@ -76,7 +76,7 @@ export interface RecentReadContent {
     lastReadEpisodeId: number;
     contentType: string;
     serialDay: string;
-    status: string;
+    status: ContentStatus;
 }
 
 

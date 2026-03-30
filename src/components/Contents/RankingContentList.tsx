@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { SimpleContent } from "../../types/Content";
+import { RankingContent } from "../../types/Content";
 import { useRankingSlide } from "./Hooks/useRankingSlide";
 import * as S from "../Styles/RankingContent.styles"
 import RankingContentItem from "./RankingContentItem";
 
 interface Props {
-    contents: SimpleContent[];
+    contents: RankingContent[];
     layout: "grid" | "slider";
 }
 
