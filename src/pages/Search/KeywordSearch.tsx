@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { MainContainer, NoSidebarMain, SortBtn } from "../../styles/Layout.styles";
+import CustomSelect from "../../components/Common/CustomSelect";
 import { useSearchParams } from "react-router-dom";
 import api from "../../api/axiosInstance";
 import { Category } from "../../types/Keyword";
@@ -28,6 +29,12 @@ function KeywordSearch() {
     const query = searchParams.get("keyword") || "SF";
     const sort = searchParams.get("sort") || "popular"
     const page = parseInt(searchParams.get("page") || "0", 10);
+
+    const sortOptions = [
+        { label: "최신 순", value: "latest" },
+        { label: "별점 순", value: "rating" },
+        { label: "인기 순", value: "popular" }
+    ];
 
     useEffect(() => {
         async function fetchCategoryKeywords() {
@@ -148,9 +155,11 @@ function KeywordSearch() {
                 </S.KeywordTable>
                 <S.SelectSortSection>
                     <S.SelectSortBtnGroup>
-                        <SortBtn $active={sort === "latest"} onClick={() => handleParamClick("sort", "latest")}>최신 순</SortBtn>
-                        <SortBtn $active={sort === "rating"} onClick={() => handleParamClick("sort", "rating")}>별점 순</SortBtn>
-                        <SortBtn $active={sort === "popular"} onClick={() => handleParamClick("sort", "popular")}>인기 순</SortBtn>
+                        <CustomSelect
+                            options={sortOptions}
+                            value={sort}
+                            onChange={(val) => handleParamClick("sort", val)}
+                        />
                     </S.SelectSortBtnGroup>
                 </S.SelectSortSection>
                 {pageData && (

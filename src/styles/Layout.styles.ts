@@ -37,6 +37,13 @@ export const SidebarMain = styled.main`
   align-items: flex-start;
 `;
 
+export const SidebarRightWrap = styled.div`
+  flex: 1 1 0;
+  min-width: 0;
+  margin-top: 1em;
+  padding-top: 10px;
+`
+
 export const SortBtn = styled.button<{$active: boolean}>`
     color: ${({$active}) => ($active? "#69a3ff" : "#b4b4b4" )};
     font-weight: ${({$active}) => ($active? "500" : "")};

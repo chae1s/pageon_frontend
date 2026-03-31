@@ -27,6 +27,11 @@ export const HeaderLogoSearchUser = styled.div`
 export const HeaderLogo = styled(Link)`
   display: inline-flex;
   width: fit-content;
+
+  img {
+    height: 35px;
+    width: auto;
+  }
 `
 
 export const BookSearchForm = styled.form`
@@ -133,11 +138,13 @@ export const HeaderLinkList = styled.div`
   scrollbar-width: none;
 `
 
-export const HeaderNavLink = styled(NavLink)<{$first: boolean}>`
+export const HeaderNavLink = styled(NavLink)<{$first: boolean, $active?: boolean}>`
   display: flex;
   align-items: center;
   padding: 17px 16px;
   padding-left: ${({$first}) => ($first? "0px" : "16px" )};
+
+  color: ${({ $active }) => ($active ? "#69a3ff" : "inherit")};
 
   &.active {
       color: #69a3ff;

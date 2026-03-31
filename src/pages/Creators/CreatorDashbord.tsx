@@ -1,19 +1,18 @@
-import React from "react";
-import "../../styles/reset.css"
-import "../../styles/global.css"
+
 import CreatorSidebar from "../../components/Sidebars/CreatorSidebar";
 import "./Creators.css"
+import { MainContainer, SidebarMain } from "../../styles/Layout.styles";
 function CreatorDashbord() {
 
     return (
-        <div className="main-container">
-            <main className="sidebar-main">
+        <MainContainer>
+            <SidebarMain>
                 <CreatorSidebar />
                 <div className="creator-right-wrap">
                     
                 </div>
-            </main>
-        </div>
+            </SidebarMain>
+        </MainContainer>
     )
 }
 

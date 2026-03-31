@@ -1,11 +1,11 @@
 import React from "react";
 import * as S from "../Styles/RankingContent.styles"
 import { Link } from "react-router-dom";
-import { SimpleContent } from "../../types/Content";
+import { RankingContent } from "../../types/Content";
 import { formatKorean, formatUrl } from "../../utils/formatContentType";
 
 interface Props {
-    content: SimpleContent;
+    content: RankingContent;
     rank: number;
 }
 

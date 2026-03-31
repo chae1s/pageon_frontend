@@ -2,8 +2,8 @@ import React, {useState, useEffect} from "react";
 import { Link, NavLink, useNavigate} from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import * as H from "../Styles/Header.styles";
-import logo from '../../assets/icon.png'
-import api from "../../api/axiosInstance";
+import logo from '../../assets/logo.png'
+
 
 
 function Header() {

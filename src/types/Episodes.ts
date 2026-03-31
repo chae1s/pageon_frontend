@@ -1,5 +1,5 @@
 import { BestComment } from "./Comments";
-import { WebtoonImagesResponse } from "./WebtoonImage";
+import { EpisodeImage } from "./WebtoonImage";
 
 export interface EpisodeSummary {
     id: number;
@@ -35,7 +35,7 @@ export interface WebtoonEpisodeDetail {
     rentalPrice: number;
     averageRating: number;
     ratingCount: number;
-    images: WebtoonImagesResponse[];
+    images: EpisodeImage[];
     prevEpisodeId: number | null;
     nextEpisodeId: number | null;
     userScore: number | null;

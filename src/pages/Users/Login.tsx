@@ -88,19 +88,33 @@ function Login() {
                 email: formData.email,
                 password: formData.password
             });
-
+    
             const jwtInfo = response.data.success;
             
-            if(jwtInfo && jwtInfo.isLogin) {
+            if (jwtInfo && jwtInfo.isLogin) {
                 login(jwtInfo.accessToken, jwtInfo.userRoles, jwtInfo.oauthProvider);
-
+    
+                const isAtMain = !from || from === "/" || from === "";
+    
+                let targetPath = from;
+    
+                if (isAtMain && jwtInfo.targetPath) {
+                    targetPath = jwtInfo.targetPath 
+                } else if (!from) {
+                    targetPath = "/"; 
+                }
+    
                 alert("로그인에 성공하였습니다.");
-                console.log(from);
-                navigate(from, { replace: true });
+                
+                setTimeout(() => {
+                    navigate(targetPath, { replace: true });
+                }, 100);
+    
             } else {
                 setError("이메일 또는 비밀번호가 올바르지 않습니다.");
             }
         } catch (err) {
+            console.error(err);
             setError("이메일 또는 비밀번호가 올바르지 않습니다.");
         } 
     };
