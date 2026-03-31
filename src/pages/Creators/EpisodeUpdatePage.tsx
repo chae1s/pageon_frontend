@@ -170,20 +170,6 @@ function EpisodeUpdatePage() {
         }
     };
 
-    const handleDelete = async () => {
-        if (!window.confirm("정말로 이 에피소드를 삭제하시겠습니까?")) return;
-
-        const contentTypePath = formatUrl(simpleContent?.contentType || "");
-        try {
-            await api.delete(`/creators/${contentTypePath}/${contentId}/episodes/${episodeId}`);
-            alert("에피소드가 삭제되었습니다.");
-            navigate(`/creators/contents/episodes/dashboard?contentId=${contentId}`);
-        } catch (error) {
-            console.error("에피소드 삭제 실패:", error);
-            alert("에피소드 삭제에 실패했습니다.");
-        }
-    };
-
     if (loading || !simpleContent) {
         return (
             <MainContainer>
@@ -244,13 +230,6 @@ function EpisodeUpdatePage() {
                         >
                             취소
                         </S.CancelButton>
-                        <S.DeleteActionBtn
-                            type="button"
-                            onClick={handleDelete}
-                            style={{ marginLeft: 'auto' }}
-                        >
-                            삭제하기
-                        </S.DeleteActionBtn>
                     </S.SubmitButtonWrap>
                 </S.RegisterForm>
             </NoSidebarMain>

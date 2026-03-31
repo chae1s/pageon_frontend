@@ -60,6 +60,19 @@ function EpisodeDetailPage() {
         navigate(`/creators/${contentType}/${contentId}/episodes/${episodeId}/edit`);
     };
 
+    const handleDelete = async () => {
+        if (!window.confirm("정말로 이 에피소드를 삭제하시겠습니까?")) return;
+
+        try {
+            await api.delete(`/creators/${contentType}/${contentId}/episodes/${episodeId}`);
+            alert("에피소드가 삭제되었습니다.");
+            navigate(`/creators/contents/episodes/dashboard?contentId=${contentId}`);
+        } catch (error) {
+            console.error("에피소드 삭제 실패:", error);
+            alert("에피소드 삭제에 실패했습니다.");
+        }
+    };
+
     return (
         <MainContainer>
             <NoSidebarMain>
@@ -93,7 +106,7 @@ function EpisodeDetailPage() {
                                 <S.DetailActionLink onClick={handleEdit}>
                                     수정
                                 </S.DetailActionLink>
-                                <S.DetailActionLink onClick={handleEdit}>
+                                <S.DetailActionLink onClick={handleDelete}>
                                     삭제
                                 </S.DetailActionLink>
                                 <S.DetailActionLink onClick={() => navigate(`/creators/contents/episodes/dashboard?contentId=${contentId}`)}>

@@ -35,7 +35,7 @@ function ContentDashboard() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const queryContentId = searchParams.get("contentId");
-    
+
     const [contentStats, setContentStats] = useState<ContentStats | null>(null);
     const [currentContent, setCurrentContent] = useState<ContentIndividual | null>(null);
     const [selectedWorkId, setSelectedWorkId] = useState<number | null>(null);
@@ -494,56 +494,6 @@ function ContentDashboard() {
                         </S.ChartsGrid>
                     </S.ManagementCard>
 
-                    {/* 4. 에피소드 목록 및 바로가기 */}
-                    <S.ManagementCard $span2>
-                        <S.ManagementCardHeader>
-                            <S.ManagementCardTitle>
-                                <ListAltIcon /> 관리 메뉴 바로가기
-                            </S.ManagementCardTitle>
-                        </S.ManagementCardHeader>
-                        <S.ShortcutGrid>
-                            <S.ShortcutItem onClick={() => navigate('/creators/contents/episodes/dashboard')}>
-                                <S.ShortcutTitleGroup>
-                                    <S.SectionTitleIcon>
-                                        <ListAltIcon />
-                                    </S.SectionTitleIcon>
-                                    <S.ShortcutTitle>에피소드 관리</S.ShortcutTitle>
-                                </S.ShortcutTitleGroup>
-                                <S.ShortcutDesc>회차별 업로드 현황 및 순서를 관리합니다.</S.ShortcutDesc>
-                            </S.ShortcutItem>
-                            <S.ShortcutItem>
-                                <S.ShortcutTitleGroup>
-                                    <S.SectionTitleIcon>
-                                        <ChatBubbleIcon />
-                                    </S.SectionTitleIcon>
-                                    <S.ShortcutTitle>댓글 및 커뮤니티</S.ShortcutTitle>
-                                </S.ShortcutTitleGroup>
-                                <S.ShortcutDesc>독자 의견 모니터링 및 클린봇을 설정합니다.</S.ShortcutDesc>
-                            </S.ShortcutItem>
-                            <S.ShortcutItem onClick={() => navigate(`/creators/contents/${currentWork.id}/update`)}>
-                                <S.ShortcutTitleGroup>
-                                    <S.SectionTitleIcon>
-                                        <SettingsSuggestIcon />
-                                    </S.SectionTitleIcon>
-                                    <S.ShortcutTitle>작품 상세 설정</S.ShortcutTitle>
-                                </S.ShortcutTitleGroup>
-                                <S.ShortcutDesc>시놉시스, 태그, 카테고리 등을 변경합니다.</S.ShortcutDesc>
-                            </S.ShortcutItem>
-                            <S.ShortcutItem onClick={() => navigate(`/creators/contents/${currentWork.id}/delete`)}>
-                                <S.ShortcutTitleGroup>
-                                    <S.SectionTitleIcon $color={currentWork.workStatus === 'DELETING' ? '#e53935' : '#3b5bdb'}>
-                                        <DeleteIcon />
-                                    </S.SectionTitleIcon>
-                                    <S.ShortcutTitle style={{ color: currentWork.workStatus === 'DELETING' ? '#e53935' : '#3b5bdb' }}>
-                                        {currentWork.workStatus === 'DELETING' ? '삭제 요청 관리' : '작품 삭제 요청'}
-                                    </S.ShortcutTitle>
-                                </S.ShortcutTitleGroup>
-                                <S.ShortcutDesc>
-                                    {currentWork.workStatus === 'DELETING' ? '현재 진행 중인 삭제 요청을 확인하거나 취소합니다.' : '이 작품의 삭제 요청을 관리자에게 접수합니다.'}
-                                </S.ShortcutDesc>
-                            </S.ShortcutItem>
-                        </S.ShortcutGrid>
-                    </S.ManagementCard>
                 </S.ManagementGrid>
             </NoSidebarMain>
         </MainContainer>

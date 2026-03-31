@@ -96,24 +96,6 @@ export const CancelButton = styled.button`
     }
 `;
 
-export const DeleteActionBtn = styled.button`
-    min-width: 180px;
-    height: 50px;
-    border: 1px solid #ffcfcf;
-    border-radius: 10px;
-    background: #fff;
-    color: #ff5252;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-
-    &:hover {
-        background: #fff5f5;
-        border-color: #ff5252;
-    }
-`;
-
 export const CoverFieldGroup = styled.div`
     display: flex;
     flex-direction: column;

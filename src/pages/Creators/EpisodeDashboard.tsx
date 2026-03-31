@@ -24,6 +24,7 @@ function EpisodeDashboard() {
     const [loading, setLoading] = useState(true);
     const [searchParams, setSearchParams] = useSearchParams();
     const [contentEpisode, setContentEpisode] = useState<ContentEpisode | null>(null);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     const sort = searchParams.get("sort") || "latest";
     const status = searchParams.get("status") || "ALL";
@@ -59,11 +60,6 @@ function EpisodeDashboard() {
                 const targetId = parseInt(urlContentId, 10);
                 if (contentTabs.some(c => c.contentId === targetId)) {
                     setSelectedWorkId(targetId);
-
-                    // URL에서 contentId 제거 (깔끔하게 관리)
-                    const newParams = new URLSearchParams(searchParams);
-                    newParams.delete("contentId");
-                    setSearchParams(newParams, { replace: true });
                     return;
                 }
             }
@@ -71,24 +67,25 @@ function EpisodeDashboard() {
         }
     }, [contentTabs, selectedWorkId, searchParams, setSearchParams]);
 
-    const fetchEpisodeList = async () => {
-        if (!selectedWorkId) return;
-        try {
-            const params: any = {
-                sort: sort,
-                page: page,
-                status: status
-            };
-            const response = await api.get(`/creators/contents/${selectedWorkId}/episodes/dashboard`, { params });
-            setContentEpisode(response.data);
-        } catch (error) {
-            console.error("에피소드 목록 조회 실패: ", error);
-        }
-    };
-
     useEffect(() => {
-        fetchEpisodeList();
-    }, [selectedWorkId, sort, status, page]);
+        if (selectedWorkId) {
+            const fetchEpisodeList = async () => {
+                try {
+                    const params: any = {
+                        sort: sort,
+                        page: page,
+                        status: status
+                    };
+                    const response = await api.get(`/creators/contents/${selectedWorkId}/episodes/dashboard`, { params });
+                    setContentEpisode(response.data);
+
+                } catch (error) {
+                    console.error("에피소드 목록 조회 실패: ", error);
+                }
+            }
+            fetchEpisodeList();
+        }
+    }, [selectedWorkId, sort, status, page, refreshTrigger]);
 
     const handleDelete = async (episodeId: number) => {
         if (!window.confirm("정말로 이 에피소드를 삭제하시겠습니까?")) return;
@@ -100,7 +97,9 @@ function EpisodeDashboard() {
         try {
             await api.delete(`/creators/${typePath}/${selectedWorkId}/episodes/${episodeId}`);
             alert("에피소드가 삭제되었습니다.");
-            fetchEpisodeList(); // 목록 새로고침
+
+            // 데이터 새로고침 트리거
+            setRefreshTrigger(prev => prev + 1);
         } catch (error) {
             console.error("에피소드 삭제 실패:", error);
             alert("에피소드 삭제에 실패했습니다.");
