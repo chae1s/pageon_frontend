@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MainContainer, NoSidebarMain } from "../../styles/Layout.styles";
 import * as S from "./CreatorRevenue.styles";
+import api from "../../api/axiosInstance";
 import {
     MdAccountBalance,
     MdInfoOutline,
@@ -8,6 +9,8 @@ import {
     MdHistory,
     MdCloudUpload
 } from "react-icons/md";
+import { BankAccount, BankAccountList } from "../../types/Creator";
+import { formatDateAndTime } from "../../utils/formatData";
 
 // Icon casting for React 19 compatibility
 const BankIcon = MdAccountBalance as any;
@@ -17,61 +20,102 @@ const HistoryIcon = MdHistory as any;
 const UploadIcon = MdCloudUpload as any;
 
 function PayoutAccountPage() {
-    // 1. Mock Data
-    const [currentAccount, setCurrentAccount] = useState({
-        bankName: "신한은행",
-        accountNumber: "110-***-123456",
-        accountHolder: "김작가",
-        isVerified: true,
-        lastModified: "2026.03.30 14:00"
-    });
+    // 1. State Management
+    const [bankAccount, setBankAccount] = useState<BankAccount | null>(null);
+    const [accountHistory, setAccountHistory] = useState<BankAccountList[]>([]);
 
-    const [sellerType, setSellerType] = useState<'PERSONAL' | 'BUSINESS'>('PERSONAL');
+    const bankList = [
+        { code: "002", name: "KDB산업은행" },
+        { code: "003", name: "IBK기업은행" },
+        { code: "004", name: "국민은행" },
+        { code: "007", name: "수협" },
+        { code: "011", name: "NH농협은행" },
+        { code: "020", name: "우리은행" },
+        { code: "023", name: "SC제일은행" },
+        { code: "031", name: "대구은행" },
+        { code: "032", name: "부산은행" },
+        { code: "034", name: "광주은행" },
+        { code: "035", name: "제주은행" },
+        { code: "037", name: "전북은행" },
+        { code: "039", name: "경남은행" },
+        { code: "071", name: "우체국" },
+        { code: "081", name: "하나은행" },
+        { code: "088", name: "신한은행" },
+        { code: "090", name: "카카오뱅크" },
+        { code: "092", name: "토스뱅크" }
+    ];
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // 1. Current Account Info
+                const accountResponse = await api.get("/creators/settlements/bank-account");
+                setBankAccount(accountResponse.data);
+
+                // 2. Account History Info
+                const historyResponse = await api.get("/creators/settlements/bank-account/history");
+                setAccountHistory(historyResponse.data);
+                console.log("History Data:", historyResponse.data);
+            } catch (error) {
+                console.error("데이터 조회 실패: ", error);
+            }
+        }
+        fetchData();
+    }, [])
+
     const [form, setForm] = useState({
-        bank: "088", // Shinhan (Toss Code)
+        bankCode: "088", // Shinhan (Toss Code)
         accountNumber: "",
-        accountHolder: "김작가",
-        identityNumber: ""
     });
 
     const [isVerifying, setIsVerifying] = useState(false);
     const [verificationStatus, setVerificationStatus] = useState<null | 'SUCCESS' | 'ERROR'>(null);
 
-    const bankList = [
-        { code: "088", name: "신한은행" },
-        { code: "004", name: "KB국민은행" },
-        { code: "020", name: "우리은행" },
-        { code: "081", name: "하나은행" },
-        { code: "011", name: "NH농협은행" },
-        { code: "003", name: "IBK기업은행" },
-        { code: "090", name: "카카오뱅크" },
-        { code: "092", name: "토스뱅크" },
-    ];
 
-    const auditLogs = [
-        { date: "2026.03.30 14:00", action: "계좌 정보 변경 (신한은행)" },
-        { date: "2026.01.15 10:30", action: "최초 계좌 등록 (국민은행)" }
-    ];
 
-    // Handle account number input (numeric only, max 14 digits for Toss)
+    const formatAccountNumber = (num: string) => {
+        if (!num || num.length < 8) return num;
+        const first = num.slice(0, 4);
+        const last = num.slice(-4);
+        const middle = num.slice(4, -4);
+        return `${first}-${middle}-${last}`;
+    };
+
+    // Handle account number input (numeric only)
     const handleAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value.replace(/[^0-9]/g, '').slice(0, 14);
-        setForm({ ...form, accountNumber: value });
-        setVerificationStatus(null);
+        setForm(prev => ({ ...prev, accountNumber: value }));
+        if (verificationStatus) setVerificationStatus(null);
     };
 
-    const handleIdentityNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const limit = sellerType === 'PERSONAL' ? 6 : 10;
-        const value = e.target.value.replace(/[^0-9]/g, '').slice(0, limit);
-        setForm({ ...form, identityNumber: value });
-    };
+    const handleVerify = async () => {
+        // 기존 계좌가 있을 경우 확인 절차 추가
+        if (bankAccount) {
+            const isConfirmed = window.confirm("새로운 계좌를 인증하면 기존에 등록된 계좌 정보가 삭제되고 변경됩니다.");
+            if (!isConfirmed) return;
+        }
 
-    const handleVerify = () => {
         setIsVerifying(true);
-        setTimeout(() => {
+        setVerificationStatus(null);
+
+        try {
+            const response = await api.post("/creators/settlements/bank-account", {
+                bankCode: form.bankCode,
+                accountNumber: form.accountNumber
+            });
+
+            if (response.status === 200 || response.status === 201) {
+                setVerificationStatus('SUCCESS');
+                window.location.reload();
+            } else {
+                setVerificationStatus('ERROR');
+            }
+        } catch (error) {
+            console.error("계좌 인증 실패:", error);
+            setVerificationStatus('ERROR');
+        } finally {
             setIsVerifying(false);
-            setVerificationStatus('SUCCESS');
-        }, 1500);
+        }
     };
 
     return (
@@ -89,47 +133,43 @@ function PayoutAccountPage() {
                             <S.CardTitle>현재 등록된 계좌 정보</S.CardTitle>
                         </S.CardHeader>
                         <S.CurrentAccountBox>
-                            <S.BankLogo>
-                                <BankIcon />
-                            </S.BankLogo>
-                            <S.AccountInfoDetail>
-                                <S.SmallInfoLabel>{currentAccount.bankName}</S.SmallInfoLabel>
-                                <S.AccountNumberText>
-                                    {currentAccount.accountNumber}
-                                    {currentAccount.isVerified && <S.VerifiedBadge>인증 완료</S.VerifiedBadge>}
-                                </S.AccountNumberText>
-                                <S.SmallInfoLabel>예금주: {currentAccount.accountHolder}</S.SmallInfoLabel>
-                            </S.AccountInfoDetail>
+                            {bankAccount && bankAccount.bankCode ? (
+                                <>
+                                    <S.BankLogo>
+                                        <BankIcon />
+                                    </S.BankLogo>
+                                    <S.AccountInfoDetail>
+                                        <S.AccountNumberText>
+                                            {formatAccountNumber(bankAccount.accountNumber)}
+                                        </S.AccountNumberText>
+                                        <S.SmallInfoLabel>{bankAccount.bankCode}</S.SmallInfoLabel>
+                                    </S.AccountInfoDetail>
+                                </>
+                            ) : (
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', padding: '20px 0', gap: '8px' }}>
+                                    <BankIcon style={{ fontSize: '32px', color: '#dee2e6', marginBottom: '8px' }} />
+                                    <p style={{ color: '#adb5bd', fontSize: '14px', fontWeight: 500 }}>
+                                        등록된 정산 계좌 정보가 없습니다.
+                                    </p>
+                                </div>
+                            )}
                         </S.CurrentAccountBox>
                     </S.DashboardCard>
 
                     {/* 2. Account Registration / Update Form */}
                     <S.DashboardCard>
                         <S.CardHeader>
-                            <S.CardTitle>계좌 정보 설정</S.CardTitle>
+                            <S.CardTitle>계좌 정보 등록</S.CardTitle>
                         </S.CardHeader>
 
-                        <S.TypeToggleRow>
-                            <S.TypeToggleButton 
-                                $active={sellerType === 'PERSONAL'} 
-                                onClick={() => setSellerType('PERSONAL')}
-                            >
-                                개인 작가
-                            </S.TypeToggleButton>
-                            <S.TypeToggleButton 
-                                $active={sellerType === 'BUSINESS'} 
-                                onClick={() => setSellerType('BUSINESS')}
-                            >
-                                사업자 작가
-                            </S.TypeToggleButton>
-                        </S.TypeToggleRow>
-                        
+
                         <S.InputGrid>
+
                             <S.InputGroup>
                                 <S.LabelText>은행 선택</S.LabelText>
-                                <S.StyledSelect 
-                                    value={form.bank} 
-                                    onChange={(e) => setForm({...form, bank: e.target.value})}
+                                <S.StyledSelect
+                                    value={form.bankCode}
+                                    onChange={(e) => setForm(prev => ({ ...prev, bankCode: e.target.value }))}
                                 >
                                     {bankList.map(bank => (
                                         <option key={bank.code} value={bank.code}>{bank.name}</option>
@@ -137,15 +177,6 @@ function PayoutAccountPage() {
                                 </S.StyledSelect>
                             </S.InputGroup>
 
-                            <S.InputGroup>
-                                <S.LabelText>{sellerType === 'PERSONAL' ? '생년월일 (6자리)' : '사업자 등록번호 (10자리)'}</S.LabelText>
-                                <S.StyledInput 
-                                    type="text" 
-                                    value={form.identityNumber}
-                                    onChange={handleIdentityNumberChange}
-                                    placeholder={sellerType === 'PERSONAL' ? 'YYMMDD' : '000-00-00000'}
-                                />
-                            </S.InputGroup>
 
                             <S.InputGroup style={{ gridColumn: '1 / -1' }}>
                                 <S.LabelText>계좌번호</S.LabelText>
@@ -170,14 +201,13 @@ function PayoutAccountPage() {
                                         <CheckIcon style={{ fontSize: '16px' }} /> 계좌가 성공적으로 인증되었습니다.
                                     </span>
                                 )}
+                                {verificationStatus === 'ERROR' && (
+                                    <span style={{ fontSize: '13px', color: '#e03131', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                        계좌 인증에 실패했습니다. 정보를 다시 확인해주세요.
+                                    </span>
+                                )}
                             </S.InputGroup>
                         </S.InputGrid>
-
-                        <S.ActionRow>
-                            <S.MainButton disabled={verificationStatus !== 'SUCCESS'}>
-                                정보 저장하기
-                            </S.MainButton>
-                        </S.ActionRow>
                     </S.DashboardCard>
 
                     {/* 3. Notices */}
@@ -205,12 +235,30 @@ function PayoutAccountPage() {
                             </S.CardTitle>
                         </S.CardHeader>
                         <S.AuditLogList>
-                            {auditLogs.map((log, idx) => (
-                                <S.AuditLogItem key={idx}>
-                                    <span>{log.action}</span>
-                                    <span>{log.date}</span>
-                                </S.AuditLogItem>
-                            ))}
+                            {accountHistory.length > 0 ? (
+                                [...accountHistory]
+                                    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                                    .map((log) => {
+                                        const isCurrent = log.deletedAt === null;
+                                        return (
+                                            <S.AuditLogItem key={log.id}>
+                                                <span style={{ color: isCurrent ? '#4c6ef5' : 'inherit' }}>
+                                                    {isCurrent ? "현재 등록 계좌" : "이전 계좌 기록"} ({log.bankCode})
+                                                </span>
+                                                <span style={{ textAlign: 'right', fontSize: '12px' }}>
+                                                    <div>등록: {formatDateAndTime(log.createdAt)}</div>
+                                                    {!isCurrent && (
+                                                        <div style={{ marginTop: '2px' }}>
+                                                            변경: {formatDateAndTime(log.deletedAt)}
+                                                        </div>
+                                                    )}
+                                                </span>
+                                            </S.AuditLogItem>
+                                        );
+                                    })
+                            ) : (
+                                <p style={{ fontSize: '13px', color: '#adb5bd', textAlign: 'center', padding: '10px 0' }}>변경 이력이 없습니다.</p>
+                            )}
                         </S.AuditLogList>
                     </S.DashboardCard>
 

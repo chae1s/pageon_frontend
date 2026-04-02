@@ -49,6 +49,7 @@ import RevenueDashboard from "./pages/Creators/RevenueDashboard";
 import PayoutAccountPage from "./pages/Creators/PayoutAccountPage";
 import ContentDetailPage from "./pages/Creators/ContentDetailPage";
 import EpisodeDetailPage from "./pages/Creators/EpisodeDetailPage";
+import SettlementHistoryPage from "./pages/Creators/SettlementHistoryPage";
 
 function Router() {
     const location = useLocation();
@@ -129,7 +130,8 @@ function Router() {
                     <Route path="/creators/webtoons/:contentId/episodes/:episodeId" element={<EpisodeDetailPage />} />
                     <Route path="/creators/:type/:contentId/episodes/:episodeId/edit" element={<EpisodeUpdatePage />} />
                     <Route path="/creators/revenue/dashboard" element={<RevenueDashboard />} />
-                    <Route path="/creators/revenue/account" element={<PayoutAccountPage />} />
+                    <Route path="/creators/revenue/history" element={<SettlementHistoryPage />} />
+                    <Route path="/creators/settlements/bank-account" element={<PayoutAccountPage />} />
                 </Route>
 
 

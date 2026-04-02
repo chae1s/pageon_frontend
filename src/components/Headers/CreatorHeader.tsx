@@ -57,7 +57,7 @@ function CreatorHeader() {
         <H.HeaderContainer>
             <H.Header>
                 <H.HeaderLogoSearchUser>
-                    <H.HeaderLogo to={"/creators/dashboard"}>
+                    <H.HeaderLogo to={"/creators/contents/dashboard"}>
                         <img src={logo} />
                     </H.HeaderLogo>
                     <CreatorHeaderSpace>

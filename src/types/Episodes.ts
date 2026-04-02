@@ -5,7 +5,7 @@ export interface EpisodeSummary {
     id: number;
     episodeNum: number;
     episodeTitle: string;
-    createdAt: string;
+    publishedAt: string;
     purchasePrice: number;
     rentalPrice: number;
     episodePurchase: EpisodePurchase | null;

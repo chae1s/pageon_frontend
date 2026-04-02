@@ -154,3 +154,74 @@ export interface WebtoonEpisodeDetail {
     episodeImages: EpisodeImage[];
     createdAt: string;
 }
+
+export interface BankAccount {
+    id: number;
+    bankCode: string;
+    accountNumber: string;
+}
+
+
+export interface BankAccountList {
+    id: number;
+    bankCode: string;
+    createdAt: string;
+    deletedAt: string;
+}
+
+export interface SettlementSummary {
+    settlementId: number;
+    settledPoint: number;
+    scheduledAt: string;
+    settlementStatus: string;
+}
+
+export interface RevenueDetail {
+    settlementId: number;
+    totalPoint: number;
+    platformFee: number;
+    taxFee: number;
+    settledPoint: number;
+    payoutDate: string;
+}
+
+export interface ExpectedRevenue {
+    totalPoint: number;
+    settledPoint: number;
+    payoutDate: string;
+}
+
+export interface ContentRevenue {
+    contentTitle: string;
+    revenue: number;
+    percentage: number;
+}
+
+export interface RevenueAnalytics {
+    totalRevenue: number;
+    contents: ContentRevenue[];
+}
+
+export interface DailyRevenue {
+    date: string;
+    revenue: number;
+}
+
+export interface RevenueTrend {
+    maxRevenue: number;
+    dailyRevenues: DailyRevenue[];
+}
+
+export interface SettlementDetail {
+    settlementId: number;
+    totalPoint: number;
+    platformFee: number;
+    taxFee: number;
+    settledPoint: number;
+    periodStart: string;
+    periodEnd: string;
+    scheduledAt: string;
+    settledAt: string;
+    payoutDate: string;
+    settlementStatus: string;
+}

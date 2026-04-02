@@ -49,6 +49,8 @@ function PageNavigator({ pageData, handlePageChange }: PaginationProps) {
         </svg>
     )
 
+    if (pageData.totalPages <= 1) return null;
+
     return (
         <S.PaginationContainer>
             
