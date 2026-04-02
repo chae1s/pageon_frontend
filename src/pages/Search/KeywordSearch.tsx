@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import { MainContainer, NoSidebarMain, SortBtn } from "../../styles/Layout.styles";
+import React, { useEffect, useState } from "react";
+import { MainContainer, NoSidebarMain } from "../../styles/Layout.styles";
 import CustomSelect from "../../components/Common/CustomSelect";
 import { useSearchParams } from "react-router-dom";
 import api from "../../api/axiosInstance";
@@ -13,13 +13,6 @@ import PageNavigator from "../../components/Pagination/PageNavigator";
 function KeywordSearch() {
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const categoryMap: Record<string, string> = {
-        genre: "장르",
-        theme: "소재", 
-        setting: "배경",
-        mood: "분위기", 
-        others: "형식/기타",
-    }
 
     const [categories, setCategories] = useState<Category[]>([]);
 
@@ -43,7 +36,7 @@ function KeywordSearch() {
             try {
 
                 const response = await api.get("/keywords");
-                
+
                 setCategories(response.data);
             } catch (error) {
                 console.error("카테고리 별 키워드 조회 실패: ", error);
@@ -51,7 +44,7 @@ function KeywordSearch() {
         }
 
         fetchCategoryKeywords();
-        
+
     }, [query]);
 
     useEffect(() => {
@@ -64,7 +57,7 @@ function KeywordSearch() {
                         page: page,
                     }
                 });
-                
+
                 setPageData(response.data)
 
             } catch (error) {
@@ -75,8 +68,8 @@ function KeywordSearch() {
         if (query) {
             fetchSearchResults();
         }
-        
-    }, [contentType, query, sort, page]); 
+
+    }, [contentType, query, sort, page]);
 
     const handleParamClick = (newKey: string, newValue: string) => {
         const newParams = new URLSearchParams(searchParams);
@@ -91,34 +84,6 @@ function KeywordSearch() {
         newParams.set("page", newPage.toString());
         setSearchParams(newParams);
     }
-
-
-    const getPageNumbers = () => {
-        if (!pageData) return [];
-
-        const currentPage = pageData.pageNumber;
-        const totalPages = pageData.totalPages;
-
-        // 한 번에 보여줄 페이지 번호 개수
-        const pageBlockSize = 6;
-
-        const startPage = Math.floor(currentPage / pageBlockSize) * pageBlockSize;
-
-        let endPage = startPage + pageBlockSize - 1;
-
-        if (endPage >= totalPages) {
-            endPage = totalPages - 1;
-        }
-
-        const pages = [];
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(i)
-        }
-
-        return pages;
-    }
-
-    const pageNumbers = getPageNumbers();
 
     return (
         <MainContainer>
@@ -163,9 +128,9 @@ function KeywordSearch() {
                     </S.SelectSortBtnGroup>
                 </S.SelectSortSection>
                 {pageData && (
-                    <SearchContentList 
-                        contents={pageData.content} 
-                        totalElements={pageData.totalElements} 
+                    <SearchContentList
+                        contents={pageData.content}
+                        totalElements={pageData.totalElements}
                         emptyMessage="해당 키워드를 가진 작품이 없습니다."
                     />
                 )}
@@ -173,8 +138,8 @@ function KeywordSearch() {
                 {pageData && pageData.totalPages > 0 && (
                     <PageNavigator pageData={pageData} handlePageChange={handlePageChange} />
                 )}
-                
-                
+
+
             </NoSidebarMain>
         </MainContainer>
     )

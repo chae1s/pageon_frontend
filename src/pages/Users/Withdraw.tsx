@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { MainContainer, SidebarMain, SidebarRightWrap } from "../../styles/Layout.styles";
 import * as M from "./MyPage.styles"
 import { UserProfile, DeleteRequest } from "../../types/User";
-import axios from "axios";
 import Sidebar from "../../components/Sidebars/MyPageSidebar";
 import api from "../../api/axiosInstance";
 
@@ -142,16 +141,16 @@ function Withdraw() {
     })
 
     useEffect(() => {
-        async function fetchData() {
+        const fetchData = async () => {
             try {
                 const response = await api.get("/users/me");
-    
+
                 setUserInfo(response.data);
                 console.log(userInfo)
             } catch (error) {
                 alert("사용자 정보를 불러오지 못했습니다.");
             }
-        } ;
+        };
         fetchData();
     }, []);
 
@@ -166,7 +165,7 @@ function Withdraw() {
         "기타"
     ]
 
-    const handleReasonChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const handleReasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const reasonIdx = Number(e.target.value)
         setDeleteData(prev => ({
             ...prev,
@@ -188,7 +187,7 @@ function Withdraw() {
         }
     }
 
-    const handleOtherReasonChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const handleOtherReasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const reason = e.target.value;
 
         setDeleteData(prev => ({
@@ -197,16 +196,16 @@ function Withdraw() {
         }))
     }
 
-    const handlePasswordChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const checkPassword = e.target.value;
-        
+
         setDeleteData(prev => ({
             ...prev,
             password: checkPassword
-        })) 
+        }))
     }
 
-    const handleSumbit = async (e:React.FormEvent<HTMLFormElement>) => {
+    const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (userInfo?.oauthProvider === "EMAIL" && !deleteData.password) {
@@ -231,18 +230,13 @@ function Withdraw() {
         if (!isConfirmed) return;
 
         try {
-            const response = await axios.post("/api/users/withdraw", deleteData, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-                },
-                withCredentials: true
-            })
-    
+            const response = await api.post("/users/withdraw", deleteData);
+
             if (response.data.isDeleted) {
                 alert(response.data.message);
-    
+
                 localStorage.removeItem("accessToken");
-    
+
                 window.location.href = "/";
             } else {
                 setError(response.data.message)
@@ -280,7 +274,7 @@ function Withdraw() {
                             <WithdrawReasonOptions>
                                 {withdrawReasons.map((reason, index) => (
                                     <WithdrawReasonLabel key={index}>
-                                        <WithdrawReasonInput 
+                                        <WithdrawReasonInput
                                             type="radio"
                                             name="withdrawReason"
                                             value={index}
@@ -288,8 +282,8 @@ function Withdraw() {
                                         />
                                         <WithdrawReasonText>{reason}</WithdrawReasonText>
                                         {reason === "기타" && (
-                                            <WithdrawOtherReason 
-                                                type="text" 
+                                            <WithdrawOtherReason
+                                                type="text"
                                                 value={deleteData.otherReason}
                                                 placeholder="기타 이유를 입력해주세요."
                                                 onChange={handleOtherReasonChange}
@@ -303,13 +297,13 @@ function Withdraw() {
                             {userInfo?.oauthProvider === "EMAIL" && (
                                 <div>
                                     <M.PasswordCheckLabel htmlFor="">비밀번호</M.PasswordCheckLabel>
-                                    <M.PasswordCheckInput 
-                                        type="password" 
+                                    <M.PasswordCheckInput
+                                        type="password"
                                         id="password"
                                         value={deleteData.password}
                                         onChange={handlePasswordChange}
                                     />
-                                    {error && 
+                                    {error &&
                                         <M.ErrorMessage>{error}</M.ErrorMessage>
                                     }
                                 </div>

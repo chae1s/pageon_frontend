@@ -23,6 +23,8 @@ jobs:
 
       - name: 빌드
         run: npm run build
+        env:
+          CI: false
 
       - name: AWS 자격증명 설정
         uses: aws-actions/configure-aws-credentials@v2
