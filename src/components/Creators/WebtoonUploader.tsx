@@ -18,6 +18,11 @@ const WebtoonUploader: React.FC<WebtoonUploaderProps> = ({ images, setImages }) 
 
     const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
+        if (images.length + files.length > 60) {
+            alert("이미지는 최대 60장까지 등록할 수 있습니다.");
+            return;
+        }
+
         const maxLabel = images.length > 0 ? Math.max(...images.map(img => img.label)) : 0;
 
         const newImages: EpisodeImageItem[] = files.map((file, index) => ({
@@ -58,7 +63,7 @@ const WebtoonUploader: React.FC<WebtoonUploaderProps> = ({ images, setImages }) 
         <S.FieldGroup style={{ marginTop: '10px' }}>
             <S.WeekdayFieldRow style={{ marginBottom: '10px', gap: '8px' }}>
                 <S.FieldLabel style={{ width: 'auto', marginBottom: 0 }}>에피소드 이미지</S.FieldLabel>
-                <S.ContentBadge>[이미지 개수 {images.length}]</S.ContentBadge>
+                <S.ContentBadge>[이미지 {images.length}/60]</S.ContentBadge>
             </S.WeekdayFieldRow>
             <S.ImageGrid>
                 <S.FileInput
@@ -93,8 +98,9 @@ const WebtoonUploader: React.FC<WebtoonUploaderProps> = ({ images, setImages }) 
                     </S.ImageItem>
                 ))}
             </S.ImageGrid>
-            <div style={{ marginTop: '8px', fontSize: '13px', color: '#888' }}>
-                * 드래그하여 이미지 순서를 변경할 수 있습니다.
+            <div style={{ marginTop: '8px', fontSize: '13px', color: '#888', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>* 드래그하여 이미지 순서를 변경할 수 있습니다.</div>
+                <div style={{ color: '#e03131', fontWeight: 600 }}>* 최대 60장까지 등록 가능합니다.</div>
             </div>
         </S.FieldGroup>
     );

@@ -1284,7 +1284,10 @@ export const StatusLabel = styled.span`
 `;
 
 export const StatusValueBadge = styled.span<{ $type?: string }>`
-    padding: 4px 10px;
+    display: inline-block;
+    width: 57px;
+    text-align: center;
+    padding: 4px 0;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 700;
