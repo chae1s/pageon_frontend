@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-export function formatDate(dateTimeString: string) : string {
+export function formatDate(dateTimeString: string): string {
     if (!dateTimeString) {
         return '';
     }
@@ -9,7 +9,15 @@ export function formatDate(dateTimeString: string) : string {
 
 }
 
-export function formatDateAndTime(dateTimeString: string) : string {
+export function formatMonth(dateTimeString: string): string {
+    if (!dateTimeString) {
+        return '';
+    }
+
+    return dayjs(dateTimeString).format('YYYY.MM');
+}
+
+export function formatDateAndTime(dateTimeString: string): string {
     if (!dateTimeString) {
         return '';
     }
@@ -17,7 +25,7 @@ export function formatDateAndTime(dateTimeString: string) : string {
     return dayjs(dateTimeString).format('YYYY.MM.DD HH:mm:ss');
 }
 
-export function formatNumber(num: number | string | undefined | null) : string {
+export function formatNumber(num: number | string | undefined | null): string {
     if (num === null || num === undefined || num === '') {
         return '0';
     }
@@ -34,4 +42,12 @@ export function formatCompactNumber(num: number | undefined | null): string {
         return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
     }
     return num.toString();
+}
+
+export function formatCurrency(num: number | undefined | null): string {
+    if (num === null || num === undefined) {
+        return '₩0';
+    }
+
+    return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(num);
 }

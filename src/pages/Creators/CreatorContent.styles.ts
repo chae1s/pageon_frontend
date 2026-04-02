@@ -1639,7 +1639,6 @@ export const PageHeaderWrapper = styled.div`
 export const PageDescription = styled.p`
     color: #666;
     font-size: 14px;
-    margin-top: 4px;
 `;
 
 export const SubHeaderWrapper = styled.div`
@@ -2156,6 +2155,50 @@ export const ChartWrapper = styled.div`
     }
 `;
 
+export const ChartTooltip = styled.div<{ $x: number; $y: number }>`
+    position: absolute;
+    left: ${props => props.$x}%;
+    top: ${props => props.$y}px;
+    transform: translate(-50%, -110%);
+    background: rgba(33, 37, 41, 0.9);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    transition: opacity 0.15s ease-out;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: rgba(33, 37, 41, 0.9) transparent transparent transparent;
+    }
+
+    span:first-child {
+        font-weight: 700;
+        opacity: 0.8;
+        font-size: 11px;
+    }
+    
+    span:last-child {
+        font-weight: 800;
+        font-size: 13px;
+        color: #fab005;
+    }
+`;
+
 export const ConversionStats = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -2164,21 +2207,24 @@ export const ConversionStats = styled.div`
 `;
 
 export const StatBox = styled.div`
-    background: #f8f9fa;
-    padding: 16px;
-    border-radius: 12px;
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 0;
 
     span:first-child {
-        font-size: 12px;
+        font-size: 14px;
         color: #868e96;
         font-weight: 600;
+        
+        &::after {
+            content: ':';
+            margin-left: 2px;
+        }
     }
     
     span:last-child {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 800;
         color: #222;
     }
@@ -2196,6 +2242,12 @@ export const RevenueTable = styled.table`
         font-weight: 600;
         color: #868e96;
         border-bottom: 1px solid #f1f3f5;
+
+        &:nth-child(2) {
+            width: 134px;
+            min-width: 134px;
+            max-width: 134px;
+        }
     }
 
     td {
@@ -2203,22 +2255,143 @@ export const RevenueTable = styled.table`
         font-size: 14px;
         color: #495057;
         border-bottom: 1px solid #f1f3f5;
+
+        &:nth-child(2) {
+            width: 134px;
+            min-width: 134px;
+            max-width: 134px;
+        }
     }
 `;
 
-export const DownloadBtn = styled.button`
-    padding: 6px 10px;
-    background: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
+export const HistoryTable = styled.table`
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 40px;
+`;
+
+export const HistoryCol = styled.col<{ $width?: string }>`
+    width: ${props => props.$width || 'auto'};
+`;
+
+export const HistoryThead = styled.thead`
+`;
+
+export const HistoryTr = styled.tr`
+    border-bottom: solid 1px #e5e5e5;
+    font-size: 13px;
+`;
+
+export const HistoryTh = styled.th<{ $align?: string }>`
+    padding: 12px 15px;
+    font-weight: 600;
+    color: #222;
+    text-align: ${props => props.$align || 'center'};
+`;
+
+export const HistoryTbody = styled.tbody`
+`;
+
+export const HistoryTd = styled.td<{ $align?: string; $isAmount?: boolean }>`
+    padding: 15px;
+    font-size: 14px;
+    color: ${props => props.$isAmount ? '#69a3ff' : '#444'};
+    font-weight: ${props => props.$isAmount ? '600' : '400'};
+    text-align: ${props => props.$align || 'center'};
+`;
+
+export const HistoryListSection = styled.div`
+    width: 100%;
+    margin-top: 24px;
+`;
+
+export const HistoryDetailTr = styled.tr`
+    background: none;
+    border-bottom: solid 1px #e6e6e6;
+`;
+
+export const HistoryDetailTd = styled.td`
+    padding: 24px 40px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #444;
+`;
+
+export const HistoryDetailGrid = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 40px;
+`;
+
+export const HistoryDetailLeft = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+`;
+
+export const HistoryDetailRight = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: flex-end;
+    padding-top: 4px;
+`;
+
+export const HistoryDetailHeaderLabel = styled.div`
     font-size: 12px;
+    font-weight: 700;
+    color: #adb5bd;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+`;
+
+export const HistoryDetailContent = styled.div`
+    display: flex;
+    justify-content: space-between;
+    max-width: 320px;
+    margin-bottom: 6px;
+    
+    span:first-child {
+        color: #868e96;
+        font-size: 13px;
+    }
+    
+    span:last-child {
+        font-weight: 600;
+        color: #222;
+        font-size: 13px;
+    }
+`;
+
+export const HistoryDetailDivider = styled.div`
+    border-top: 1px solid #f1f3f5;
+    margin: 12px 0 8px 0;
+    max-width: 320px;
+`;
+
+export const DownloadBtn = styled.button`
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 18px;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 13px;
     font-weight: 600;
     color: #495057;
     cursor: pointer;
     transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 
     &:hover {
-        background: #e9ecef;
+        background: #f8f9fa;
+        border-color: #adb5bd;
+        transform: translateY(-1px);
+    }
+    
+    &:active {
+        transform: translateY(0);
     }
 `;
 

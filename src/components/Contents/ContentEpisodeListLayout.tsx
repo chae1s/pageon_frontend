@@ -7,6 +7,7 @@ import api from '../../api/axiosInstance';
 import { expirationCheck, expirationDate } from '../../utils/rentalEpisodeFormat';
 import PurchaseModal from '../Modals/PurchaseModal';
 import { useAuthCheck } from './Hooks/useAuthCheck';
+import { formatDate } from '../../utils/formatData';
 
 interface Props {
     type: string,
@@ -18,7 +19,7 @@ interface Props {
 
 type PurchaseModalMode = 'OWN' | 'RENT' | 'SELECT';
 
-function ContentEpisodeListLayout( {type, contentId, contentTitle, episodes}: Props ) {
+function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: Props) {
 
     const [sort, setSort] = useState<string>("recent") // first | recent
     const [showAll, setShowAll] = useState<boolean>(false);
@@ -71,7 +72,7 @@ function ContentEpisodeListLayout( {type, contentId, contentTitle, episodes}: Pr
         }
     };
 
-    
+
     const openPurchasePrompt = (episode: PurchaseTargetEpisode, mode: PurchaseModalMode, allowRent: boolean = false) => {
         setPurchasePrompt({ episode, mode, allowRent });
     };
@@ -115,7 +116,7 @@ function ContentEpisodeListLayout( {type, contentId, contentTitle, episodes}: Pr
             return;
         }
         openPurchasePrompt(episode, 'RENT');
-    } 
+    }
 
     const handleEpisodeView = (episodeId: number) => async (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!checkLogin()) {
@@ -132,12 +133,12 @@ function ContentEpisodeListLayout( {type, contentId, contentTitle, episodes}: Pr
                 if (!targetEpisode) {
                     return;
                 }
-                
+
                 openPurchasePrompt(targetEpisode, 'SELECT', isWebtoonType);
                 e.preventDefault(); // Prevent navigation
                 return;
             }
-            
+
             if (response.data) {
                 navigate(`/${type}/${contentId}/viewer/${episodeId}`);
             }
@@ -150,7 +151,7 @@ function ContentEpisodeListLayout( {type, contentId, contentTitle, episodes}: Pr
             e.preventDefault();
         }
     }
-    
+
 
     const formatPointValue = (value?: number | null) => {
         if (typeof value !== 'number') {
@@ -162,139 +163,139 @@ function ContentEpisodeListLayout( {type, contentId, contentTitle, episodes}: Pr
 
     return (
         <>
-        <S.EpisodeSection>
-            <form action="">
-                <div>
-                    <S.EpisodeListOption>
-                        <S.OptionLeft>
-                            <S.OptionItem>
-                                <S.OptionCheckbox
-                                    type='checkbox'
-                                    checked={isAllChecked}
-                                    ref={el => {
-                                        if (el) el.indeterminate = isIndeterminate;
-                                    }}
-                                    onChange={handleAllCheck}
-                                />
-                                <S.OptionCheckboxLabel>전체 선택</S.OptionCheckboxLabel>
-                            </S.OptionItem>
-                            <S.OptionItem>
-                                <S.EpisodeSellBtnWrapper>
-                                    {isWebtoonType && (
-                                        <S.RentalBtn type="button" >
-                                            선택 대여
-                                        </S.RentalBtn>
-                                    )}
-                                    <S.PurchaseBtn type="button" >
-                                        선택 구매
-                                    </S.PurchaseBtn>
-                                </S.EpisodeSellBtnWrapper>
-                            </S.OptionItem>
-                        </S.OptionLeft>
-                        <S.OptionRight>
-                            <S.EpisodeFilterWrapper>
-                                <S.EpisodeFilterBtn type='button' $active={sort === "recent"} onClick={()=>setSort('recent')}>
-                                    최신화부터
-                                </S.EpisodeFilterBtn>
-                                <S.FilterBtnDivider></S.FilterBtnDivider>
-                                <S.EpisodeFilterBtn type='button' $active={sort === "first"} onClick={()=>setSort('first')} style={{width: "50px"}}>
-                                    1화부터
-                                </S.EpisodeFilterBtn>
-                            </S.EpisodeFilterWrapper>
-                        </S.OptionRight>
-                    </S.EpisodeListOption>
-                    <S.EpisodeListWrapper>
-                        <ul>
-                            {displayedEpisodes.map((episode) => {
-                                const createDate = dayjs(episode.createdAt).format("YYYY.MM.DD")
-                                const episodeIdStr = String(episode.id);
-                                return (
-                                    <S.EpisodeItem key={episode.id}>
-                                        <S.EpisodeItemLeft>
-                                            <S.OptionCheckbox
-                                                type='checkbox'
-                                                checked={selectedIds.includes(episodeIdStr)}
-                                                onChange={handleEpisodeCheck(episodeIdStr)}
-                                            />
-                                            {isWebtoonType && 
-                                                <S.EpisodeThumbnailContainer>
-                                                    <S.EpisodeThumbnailImage src=''/>
-                                                </S.EpisodeThumbnailContainer>
-                                            }
-                                            <S.EpisodeInfoContainer>
-                                                <S.EpisodeTitleAndNum>
-                                                    <span>{episode.episodeNum}화</span>
-                                                    <S.EpisodeTitle type='button' onClick={handleEpisodeView(episode.id)}>{episode.episodeTitle}</S.EpisodeTitle>
-                                                </S.EpisodeTitleAndNum>
-                                                <S.EpisodeDateAndPurchaseData>
-                                                    <S.EpisodeCreateDate>
-                                                        {createDate}
-                                                    </S.EpisodeCreateDate>
-                                                    {episode.episodePurchase && (
-                                                        <S.EpisodePurchaseText>
-                                                            {episode.episodePurchase.purchaseType === 'OWN' 
-                                                                ? '소장' 
-                                                                : expirationDate(episode.episodePurchase.expiredAt)
-                                                            }
-                                                        </S.EpisodePurchaseText>
-                                                    )}
-                                                </S.EpisodeDateAndPurchaseData>
-                                            </S.EpisodeInfoContainer>
-                                        </S.EpisodeItemLeft>
-                                        <S.EpisodeItemRight>
-                                            <S.EpisodeSellBtnWrapper>
-                                                {episode.episodePurchase == null || 
-                                                    (episode.episodePurchase.purchaseType === "RENT" && expirationCheck(episode.episodePurchase.expiredAt)) 
-                                                    ? (
-                                                        <>
-                                                            {isWebtoonType && (
-                                                                <S.RentalBtn type="button" onClick={handleEpisodeRent(episode)}>
-                                                                    대여
-                                                                </S.RentalBtn>
-                                                            )}
-                                                            <S.PurchaseBtn
-                                                                type="button"
-                                                                onClick={handleEpisodePurchase(episode)}
-                                                            >
-                                                                구매
-                                                            </S.PurchaseBtn>
-                                                        </>
-                                                    ) : (
-                                                        <S.ViewBtn
-                                                            type="button"
-                                                            onClick={handleEpisodeView(episode.id)}
-                                                        >
-                                                            보기
-                                                        </S.ViewBtn>
-                                                    )
+            <S.EpisodeSection>
+                <form action="">
+                    <div>
+                        <S.EpisodeListOption>
+                            <S.OptionLeft>
+                                <S.OptionItem>
+                                    <S.OptionCheckbox
+                                        type='checkbox'
+                                        checked={isAllChecked}
+                                        ref={el => {
+                                            if (el) el.indeterminate = isIndeterminate;
+                                        }}
+                                        onChange={handleAllCheck}
+                                    />
+                                    <S.OptionCheckboxLabel>전체 선택</S.OptionCheckboxLabel>
+                                </S.OptionItem>
+                                <S.OptionItem>
+                                    <S.EpisodeSellBtnWrapper>
+                                        {isWebtoonType && (
+                                            <S.RentalBtn type="button" >
+                                                선택 대여
+                                            </S.RentalBtn>
+                                        )}
+                                        <S.PurchaseBtn type="button" >
+                                            선택 구매
+                                        </S.PurchaseBtn>
+                                    </S.EpisodeSellBtnWrapper>
+                                </S.OptionItem>
+                            </S.OptionLeft>
+                            <S.OptionRight>
+                                <S.EpisodeFilterWrapper>
+                                    <S.EpisodeFilterBtn type='button' $active={sort === "recent"} onClick={() => setSort('recent')}>
+                                        최신화부터
+                                    </S.EpisodeFilterBtn>
+                                    <S.FilterBtnDivider></S.FilterBtnDivider>
+                                    <S.EpisodeFilterBtn type='button' $active={sort === "first"} onClick={() => setSort('first')} style={{ width: "50px" }}>
+                                        1화부터
+                                    </S.EpisodeFilterBtn>
+                                </S.EpisodeFilterWrapper>
+                            </S.OptionRight>
+                        </S.EpisodeListOption>
+                        <S.EpisodeListWrapper>
+                            <ul>
+                                {displayedEpisodes.map((episode) => {
+                                    const createDate = formatDate(episode.publishedAt)
+                                    const episodeIdStr = String(episode.id);
+                                    return (
+                                        <S.EpisodeItem key={episode.id}>
+                                            <S.EpisodeItemLeft>
+                                                <S.OptionCheckbox
+                                                    type='checkbox'
+                                                    checked={selectedIds.includes(episodeIdStr)}
+                                                    onChange={handleEpisodeCheck(episodeIdStr)}
+                                                />
+                                                {isWebtoonType &&
+                                                    <S.EpisodeThumbnailContainer>
+                                                        <S.EpisodeThumbnailImage src='' />
+                                                    </S.EpisodeThumbnailContainer>
                                                 }
-                                            </S.EpisodeSellBtnWrapper>
-                                        </S.EpisodeItemRight>
-                                    </S.EpisodeItem>
-                                );
-                            })}
-                        </ul>
-                    </S.EpisodeListWrapper>
-                    {episodes.length > 20 && !showAll && (
-                        <S.ShowAllBtnContainer>
-                            <S.ShowAllBtn type='button' onClick={() => setShowAll(true)}>
-                                더보기
-                            </S.ShowAllBtn>
-                        </S.ShowAllBtnContainer>
-                    )}
-                </div>
-            </form>
-        </S.EpisodeSection>
-        <PurchaseModal 
-            isOpen={!!purchasePrompt}
-            onClose={closePurchasePrompt}
-            onConfirm={processTransaction}
-            contentTitle={contentTitle}
-            episode={purchasePrompt?.episode || null}
-            mode={purchasePrompt?.mode || 'SELECT'}
-            allowRent={purchasePrompt?.allowRent || false}
-            isWebnovelType={isWebnovelType}
-        />
+                                                <S.EpisodeInfoContainer>
+                                                    <S.EpisodeTitleAndNum>
+                                                        <span>{episode.episodeNum}화</span>
+                                                        <S.EpisodeTitle type='button' onClick={handleEpisodeView(episode.id)}>{episode.episodeTitle}</S.EpisodeTitle>
+                                                    </S.EpisodeTitleAndNum>
+                                                    <S.EpisodeDateAndPurchaseData>
+                                                        <S.EpisodeCreateDate>
+                                                            {createDate}
+                                                        </S.EpisodeCreateDate>
+                                                        {episode.episodePurchase && (
+                                                            <S.EpisodePurchaseText>
+                                                                {episode.episodePurchase.purchaseType === 'OWN'
+                                                                    ? '소장'
+                                                                    : expirationDate(episode.episodePurchase.expiredAt)
+                                                                }
+                                                            </S.EpisodePurchaseText>
+                                                        )}
+                                                    </S.EpisodeDateAndPurchaseData>
+                                                </S.EpisodeInfoContainer>
+                                            </S.EpisodeItemLeft>
+                                            <S.EpisodeItemRight>
+                                                <S.EpisodeSellBtnWrapper>
+                                                    {episode.episodePurchase == null ||
+                                                        (episode.episodePurchase.purchaseType === "RENT" && expirationCheck(episode.episodePurchase.expiredAt))
+                                                        ? (
+                                                            <>
+                                                                {isWebtoonType && (
+                                                                    <S.RentalBtn type="button" onClick={handleEpisodeRent(episode)}>
+                                                                        대여
+                                                                    </S.RentalBtn>
+                                                                )}
+                                                                <S.PurchaseBtn
+                                                                    type="button"
+                                                                    onClick={handleEpisodePurchase(episode)}
+                                                                >
+                                                                    구매
+                                                                </S.PurchaseBtn>
+                                                            </>
+                                                        ) : (
+                                                            <S.ViewBtn
+                                                                type="button"
+                                                                onClick={handleEpisodeView(episode.id)}
+                                                            >
+                                                                보기
+                                                            </S.ViewBtn>
+                                                        )
+                                                    }
+                                                </S.EpisodeSellBtnWrapper>
+                                            </S.EpisodeItemRight>
+                                        </S.EpisodeItem>
+                                    );
+                                })}
+                            </ul>
+                        </S.EpisodeListWrapper>
+                        {episodes.length > 20 && !showAll && (
+                            <S.ShowAllBtnContainer>
+                                <S.ShowAllBtn type='button' onClick={() => setShowAll(true)}>
+                                    더보기
+                                </S.ShowAllBtn>
+                            </S.ShowAllBtnContainer>
+                        )}
+                    </div>
+                </form>
+            </S.EpisodeSection>
+            <PurchaseModal
+                isOpen={!!purchasePrompt}
+                onClose={closePurchasePrompt}
+                onConfirm={processTransaction}
+                contentTitle={contentTitle}
+                episode={purchasePrompt?.episode || null}
+                mode={purchasePrompt?.mode || 'SELECT'}
+                allowRent={purchasePrompt?.allowRent || false}
+                isWebnovelType={isWebnovelType}
+            />
         </>
     )
 

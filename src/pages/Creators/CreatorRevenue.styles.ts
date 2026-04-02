@@ -69,7 +69,7 @@ export const BankLogo = styled.div`
 export const AccountInfoDetail = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
     flex: 1;
 `;
 
@@ -162,12 +162,15 @@ export const ActionRow = styled.div`
 
 export const MainButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`
     padding: 12px 24px;
-    border-radius: 8px;
     font-size: 14px;
     font-weight: 700;
-    cursor: pointer;
     transition: all 0.2s;
     border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #3b5bdb 0%, #5c7cfa 100%);
+    color: #fff;
+    cursor: pointer;
+}
     
     background: ${({ $variant }) => ($variant === 'secondary' ? '#f1f3f5' : '#4c6ef5')};
     color: ${({ $variant }) => ($variant === 'secondary' ? '#495057' : '#fff')};
@@ -178,7 +181,6 @@ export const MainButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`
     
     &:disabled {
         background: #adb5bd;
-        cursor: not-allowed;
     }
 `;
 
