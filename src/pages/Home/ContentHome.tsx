@@ -31,32 +31,72 @@ function ContentHome() {
 
     const [activeDay, setActiveDay] = useState<string>(initialDay);
 
+    // 요일별 데이터 조회
     useEffect(() => {
-        async function fetchData() {
+        const fetchDaily = async () => {
             try {
-                const [dailyRes, newRes, masterpieceRes, keywordRes, rankingRes] = await Promise.all([
-                    api.get(`/${contentTypePath}/daily/${initialDayEng}`),
-                    api.get(`/${contentTypePath}/new`),
-                    api.get(`/${contentTypePath}/completed`),
-                    api.get(`/${contentTypePath}/keyword`),
-                    api.get(`/${contentTypePath}/hourly-ranking`)
-                ]);
-
-                setDailyContents(dailyRes.data);
-                setNewContents(newRes.data);
-                setMasterpieceContents(masterpieceRes.data);
-                setKeywordName(keywordRes.data.keyword);
-                setKeywordContents(keywordRes.data.contents.content);
-                setRankingContents(rankingRes.data);
+                const res = await api.get(`/${contentTypePath}/daily/${initialDayEng}`);
+                setDailyContents(res.data);
             } catch (error) {
-                console.error(`${contentLabel} 데이터 조회 실패: `, error);
+                console.error(`${contentLabel} 요일별 데이터 조회 실패: `, error);
             }
-        }
-
-        fetchData();
-        // contentTypePath가 변경될 때마다 데이터를 다시 불러옵니다.
+        };
+        fetchDaily();
         setActiveDay(initialDay);
-    }, [contentTypePath, initialDayEng, contentLabel]);
+    }, [contentTypePath, initialDayEng, contentLabel, initialDay]);
+
+    // 신작 데이터 조회
+    useEffect(() => {
+        const fetchNew = async () => {
+            try {
+                const res = await api.get(`/${contentTypePath}/new`);
+                setNewContents(res.data);
+            } catch (error) {
+                console.error(`${contentLabel} 신작 데이터 조회 실패: `, error);
+            }
+        };
+        fetchNew();
+    }, [contentTypePath, contentLabel]);
+
+    // 정주행 명작 데이터 조회
+    useEffect(() => {
+        const fetchMasterpiece = async () => {
+            try {
+                const res = await api.get(`/${contentTypePath}/completed`);
+                setMasterpieceContents(res.data);
+            } catch (error) {
+                console.error(`${contentLabel} 명작 데이터 조회 실패: `, error);
+            }
+        };
+        fetchMasterpiece();
+    }, [contentTypePath, contentLabel]);
+
+    // 키워드 추천 데이터 조회
+    useEffect(() => {
+        const fetchKeyword = async () => {
+            try {
+                const res = await api.get(`/${contentTypePath}/keyword`);
+                setKeywordName(res.data.keyword);
+                setKeywordContents(res.data.contents.content);
+            } catch (error) {
+                console.error(`${contentLabel} 키워드 데이터 조회 실패: `, error);
+            }
+        };
+        fetchKeyword();
+    }, [contentTypePath, contentLabel]);
+
+    // 실시간 랭킹 데이터 조회
+    useEffect(() => {
+        const fetchRanking = async () => {
+            try {
+                const res = await api.get(`/${contentTypePath}/hourly-ranking`);
+                setRankingContents(res.data);
+            } catch (error) {
+                console.error(`${contentLabel} 실시간 랭킹 데이터 조회 실패: `, error);
+            }
+        };
+        fetchRanking();
+    }, [contentTypePath, contentLabel]);
 
     const handleDayClick = async (dayIndex: number) => {
         const dayName = dayOfWeekNames[dayIndex];

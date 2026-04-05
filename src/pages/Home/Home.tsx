@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { MainContainer, NoSidebarMain } from "../../styles/Layout.styles";
 import * as H from "./Home.styles"
 import { SimpleContent, RankingContent } from "../../types/Content";
@@ -21,41 +21,69 @@ function Home() {
     const [currentBanner, setCurrentBanner] = useState(0); // 0: webtoon, 1: webnovel
     const banners = [webtoonBanner, webnovelBanner];
 
+    // 배너 자동 전환
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const [masterpieceRes, webnovelKeywordRes, webtoonKeywordRes, rankingRes] = await Promise.all([
-                    api.get('/all/completed'), 
-                    api.get('/webnovels/keyword'), 
-                    api.get('/webtoons/keyword'), 
-                    api.get('/all/hourly-ranking')
-
-                ]);
-                
-                setMasterpieceContents(masterpieceRes.data);
-
-                setWebnovelKeywordName(webnovelKeywordRes.data.keyword);
-                setWebnovelKeywordContents(webnovelKeywordRes.data.contents.content);
-
-                setWebtoonKeywordName(webtoonKeywordRes.data.keyword);
-                setWebtoonKeywordContents(webtoonKeywordRes.data.contents.content);
-                console.log(rankingRes.data);
-                setRankingContents(rankingRes.data);
-            } catch (error) {
-                console.error("작품 데이터 조회 실패: ", error);
-            }
-        }
-
-        fetchData();
-
         const bannerInterval = setInterval(() => {
             setCurrentBanner((prev) => (prev === 0 ? 1 : 0));
         }, 20000);
-
         return () => clearInterval(bannerInterval);
     }, []);
 
-    return(
+    // 정주행 랭킹 데이터 조회
+    useEffect(() => {
+        const fetchMasterpiece = async () => {
+            try {
+                const res = await api.get('/all/completed');
+                setMasterpieceContents(res.data);
+            } catch (error) {
+                console.error("정주행 랭킹 데이터 조회 실패: ", error);
+            }
+        };
+        fetchMasterpiece();
+    }, []);
+
+    // 웹소설 키워드 추천 데이터 조회
+    useEffect(() => {
+        const fetchWebnovelKeyword = async () => {
+            try {
+                const res = await api.get('/webnovels/keyword');
+                setWebnovelKeywordName(res.data.keyword);
+                setWebnovelKeywordContents(res.data.contents.content);
+            } catch (error) {
+                console.error("웹소설 키워드 데이터 조회 실패: ", error);
+            }
+        };
+        fetchWebnovelKeyword();
+    }, []);
+
+    // 웹툰 키워드 추천 데이터 조회
+    useEffect(() => {
+        const fetchWebtoonKeyword = async () => {
+            try {
+                const res = await api.get('/webtoons/keyword');
+                setWebtoonKeywordName(res.data.keyword);
+                setWebtoonKeywordContents(res.data.contents.content);
+            } catch (error) {
+                console.error("웹툰 키워드 데이터 조회 실패: ", error);
+            }
+        };
+        fetchWebtoonKeyword();
+    }, []);
+
+    // 실시간 랭킹 데이터 조회
+    useEffect(() => {
+        const fetchRanking = async () => {
+            try {
+                const res = await api.get('/all/hourly-ranking');
+                setRankingContents(res.data);
+            } catch (error) {
+                console.error("실시간 랭킹 데이터 조회 실패: ", error);
+            }
+        };
+        fetchRanking();
+    }, []);
+
+    return (
         <MainContainer>
             <NoSidebarMain>
                 <H.HomeBanner>
@@ -71,7 +99,7 @@ function Home() {
                 </H.HomeBanner>
                 <H.SectionBookList>
                     <H.SectionBookListTitle>실시간 랭킹</H.SectionBookListTitle>
-                    <RankingContentList contents={ rankingContents } layout="slider" />
+                    <RankingContentList contents={rankingContents} layout="slider" />
                 </H.SectionBookList>
                 <H.SectionBookList>
                     <H.SectionBookTitleWrapper>
@@ -81,14 +109,14 @@ function Home() {
                     <ThumbnailContentList contents={webnovelKeywordContents} />
                 </H.SectionBookList>
                 <H.SectionBookList>
-                     <H.SectionBookTitleWrapper>
+                    <H.SectionBookTitleWrapper>
                         <H.SectionBookListTitle>추천 {webtoonKeywordName} 웹툰</H.SectionBookListTitle>
                         <H.SectionBookListMoreViewLink to={`/search/keyword?contentType=webtoons&keyword=${webtoonKeywordName}`}>더보기</H.SectionBookListMoreViewLink>
                     </H.SectionBookTitleWrapper>
                     <ThumbnailContentList contents={webtoonKeywordContents} />
                 </H.SectionBookList>
                 <H.SectionBookList>
-                     <H.SectionBookTitleWrapper>
+                    <H.SectionBookTitleWrapper>
                         <H.SectionBookListTitle>정주행 랭킹</H.SectionBookListTitle>
                         <H.SectionBookListMoreViewLink to={"/contents/masterpiece"}>더보기</H.SectionBookListMoreViewLink>
                     </H.SectionBookTitleWrapper>
@@ -96,7 +124,7 @@ function Home() {
                 </H.SectionBookList>
             </NoSidebarMain>
         </MainContainer>
-        
+
     )
 }
 
