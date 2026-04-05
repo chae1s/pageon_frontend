@@ -50,6 +50,8 @@ import PayoutAccountPage from "./pages/Creators/PayoutAccountPage";
 import ContentDetailPage from "./pages/Creators/ContentDetailPage";
 import EpisodeDetailPage from "./pages/Creators/EpisodeDetailPage";
 import SettlementHistoryPage from "./pages/Creators/SettlementHistoryPage";
+import AdminHeader from "./components/Headers/AdminHeader";
+import AdminSettlementPage from "./pages/Admins/AdminSettlementPage";
 
 function Router() {
     const location = useLocation();
@@ -66,12 +68,14 @@ function Router() {
 
     const creatorHeader = location.pathname.startsWith("/creators");
     const isAuthenticated = !!localStorage.getItem("accessToken");
+    const adminHeader = location.pathname.startsWith("/admin");
 
     return (
         <>
             <GlobalStyle />
-            {!hideHeaderFooter && !creatorHeader && <Header></Header>}
-            {!hideHeaderFooter && creatorHeader && <CreatorHeader />}
+            {!hideHeaderFooter && !creatorHeader && !adminHeader && <Header></Header>}
+            {!hideHeaderFooter && creatorHeader && !adminHeader && <CreatorHeader />}
+            {!hideHeaderFooter && !creatorHeader && adminHeader && <AdminHeader />}
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/webnovels" element={<ContentHome />} />
@@ -134,6 +138,9 @@ function Router() {
                     <Route path="/creators/settlements/bank-account" element={<PayoutAccountPage />} />
                 </Route>
 
+                <Route element={<RoleRoute allowedRoles={["ROLE_ADMIN"]} />}>
+                    <Route path="/admin/settlements" element={<AdminSettlementPage />} />
+                </Route>
 
             </Routes>
             {!hideHeaderFooter && <Footer></Footer>}

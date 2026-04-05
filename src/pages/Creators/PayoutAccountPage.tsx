@@ -25,6 +25,7 @@ function PayoutAccountPage() {
     const [accountHistory, setAccountHistory] = useState<BankAccountList[]>([]);
 
     const bankList = [
+        { code: "---", name: "은행 선택" },
         { code: "002", name: "KDB산업은행" },
         { code: "003", name: "IBK기업은행" },
         { code: "004", name: "국민은행" },
@@ -64,7 +65,7 @@ function PayoutAccountPage() {
     }, [])
 
     const [form, setForm] = useState({
-        bankCode: "088", // Shinhan (Toss Code)
+        bankCode: "---", // Default to "은행 선택"
         accountNumber: "",
     });
 
@@ -89,8 +90,8 @@ function PayoutAccountPage() {
     };
 
     const handleVerify = async () => {
-        // 기존 계좌가 있을 경우 확인 절차 추가
-        if (bankAccount) {
+        // 기존 계좌가 정상적으로 등록되어 있을 경우 확인 절차
+        if (bankAccount && bankAccount.bankCode) {
             const isConfirmed = window.confirm("새로운 계좌를 인증하면 기존에 등록된 계좌 정보가 삭제되고 변경됩니다.");
             if (!isConfirmed) return;
         }
@@ -191,7 +192,7 @@ function PayoutAccountPage() {
                                     <S.MainButton
                                         $variant="secondary"
                                         onClick={handleVerify}
-                                        disabled={isVerifying || form.accountNumber.length < 8}
+                                        disabled={isVerifying || form.accountNumber.length < 8 || form.bankCode === "---"}
                                     >
                                         {isVerifying ? '인증 중...' : '계좌 인증'}
                                     </S.MainButton>
