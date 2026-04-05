@@ -5,6 +5,8 @@ import { SimpleContent, RankingContent } from "../../types/Content";
 import RankingContentList from "../../components/Contents/RankingContentList";
 import ThumbnailContentList from "../../components/Contents/ThumbnailContentList";
 import api from "../../api/axiosInstance";
+import webtoonBanner from "../../assets/webtoon_banner.png";
+import webnovelBanner from "../../assets/webnovel_banner.png";
 
 function Home() {
 
@@ -16,6 +18,8 @@ function Home() {
     const [webtoonKeywordContents, setWebtoonKeywordContents] = useState<SimpleContent[]>([]);
     const [webtoonKeywordName, setWebtoonKeywordName] = useState<string>("");
     const [rankingContents, setRankingContents] = useState<RankingContent[]>([]);
+    const [currentBanner, setCurrentBanner] = useState(0); // 0: webtoon, 1: webnovel
+    const banners = [webtoonBanner, webnovelBanner];
 
     useEffect(() => {
         async function fetchData() {
@@ -43,31 +47,27 @@ function Home() {
         }
 
         fetchData();
+
+        const bannerInterval = setInterval(() => {
+            setCurrentBanner((prev) => (prev === 0 ? 1 : 0));
+        }, 20000);
+
+        return () => clearInterval(bannerInterval);
     }, []);
 
     return(
         <MainContainer>
             <NoSidebarMain>
                 <H.HomeBanner>
-                    <div className="banner-text">
-                        <h1>
-                            인기 웹툰과 웹소설을<br />한 곳에서 즐기세요
-                        </h1>
-                        <p>
-                            최신 인기작부터 다양한 장르의 작품까지<br />
-                            지금 바로 감상해보세요!
-                        </p>
-                            <div className="banner-btns">
-                            <button className="go-webtoon-btn">웹툰 보러가기</button>
-                            <button className="go-webnovel-btn">웹소설 보러가기</button>
-                        </div>
-                    </div>
-                    <div className="banner-image">
-                        <img
-                        src="https://cdn.ridicdn.net/cover/1/cover13/2023/12/cover_1000000001_1701400000.jpg"
-                        alt="메인 배너"
-                        />
-                    </div>
+                    <H.BannerSlider $currentIndex={currentBanner}>
+                        {banners.map((banner, index) => (
+                            <H.BannerImage
+                                key={index}
+                                src={banner}
+                                alt={`메인 배너 ${index + 1}`}
+                            />
+                        ))}
+                    </H.BannerSlider>
                 </H.HomeBanner>
                 <H.SectionBookList>
                     <H.SectionBookListTitle>실시간 랭킹</H.SectionBookListTitle>

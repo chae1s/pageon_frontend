@@ -6,6 +6,8 @@ import { SimpleContent, RankingContent } from "../../types/Content";
 import ThumbnailContentList from "../../components/Contents/ThumbnailContentList";
 import RankingContentList from "../../components/Contents/RankingContentList";
 import api from "../../api/axiosInstance";
+import webtoonBanner from "../../assets/webtoon_banner.png";
+import webnovelBanner from "../../assets/webnovel_banner.png";
 
 function ContentHome() {
     const location = useLocation();
@@ -74,25 +76,11 @@ function ContentHome() {
         <MainContainer>
             <NoSidebarMain>
                 <H.HomeBanner>
-                    <div className="banner-text">
-                        <h1>
-                            인기 웹툰과 웹소설을<br />한 곳에서 즐기세요
-                        </h1>
-                        <p>
-                            최신 인기작부터 다양한 장르의 작품까지<br />
-                            지금 바로 감상해보세요!
-                        </p>
-                        <div className="banner-btns">
-                            <button className="go-webtoon-btn">웹툰 보러가기</button>
-                            <button className="go-webnovel-btn">웹소설 보러가기</button>
-                        </div>
-                    </div>
-                    <div className="banner-image">
-                        <img
-                            src="https://cdn.ridicdn.net/cover/1/cover13/2023/12/cover_1000000001_1701400000.jpg"
-                            alt="메인 배너"
-                        />
-                    </div>
+                    <img
+                        key={isWebtoon ? "webtoon" : "webnovel"}
+                        src={isWebtoon ? webtoonBanner : webnovelBanner}
+                        alt="메인 배너"
+                    />
                 </H.HomeBanner>
 
                 <H.SectionBookList>
