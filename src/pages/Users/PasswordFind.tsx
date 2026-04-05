@@ -3,8 +3,9 @@ import styled from "styled-components";
 import * as U from "./Users.styles"
 import { MainContainer, NoSidebarMain } from "../../styles/Layout.styles";
 import "./Users.css"
-import { useNavigate, Link} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import api from "../../api/axiosInstance";
 
 const SuccessMessage = styled.p`
     margin-top: 8px;
@@ -17,7 +18,7 @@ function PasswordFind() {
     const [error, setError] = useState<string>("");
     const [successMsg, setSuccessMsg] = useState<string>("");
 
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
         setError("");
         setSuccessMsg("");
@@ -30,13 +31,13 @@ function PasswordFind() {
         setSuccessMsg("");
 
         try {
-            const response = await axios.post("/api/users/find-password", {
+            const response = await api.post("/users/find-password", {
                 email: email
             });
-    
-            const {type} = response.data;
-            const {message} = response.data;
-    
+
+            const { type } = response.data;
+            const { message } = response.data;
+
             if (type === "email") {
                 setSuccessMsg(message);
             } else if (type === "social") {
@@ -51,7 +52,7 @@ function PasswordFind() {
         }
     }
 
-    return(
+    return (
         <MainContainer>
             <NoSidebarMain>
                 <U.UsersFormWrapper>
@@ -59,7 +60,7 @@ function PasswordFind() {
                     <U.UsersForm onSubmit={handleSubmit}>
                         <U.UsersFormGroup>
                             <U.UsersFormLabel htmlFor="email">이메일</U.UsersFormLabel>
-                            <U.UsersFormInput 
+                            <U.UsersFormInput
                                 type="email"
                                 id="email"
                                 name="email"
@@ -81,18 +82,18 @@ function PasswordFind() {
                                 </SuccessMessage>
                             )}
                         </div>
-                        <U.SubmitBtn type="submit"  style={{marginTop: "16px"}}>
+                        <U.SubmitBtn type="submit" style={{ marginTop: "16px" }}>
                             비밀번호 찾기
                         </U.SubmitBtn>
                     </U.UsersForm>
-                    <U.UsersLinkWrap style={{marginTop: "24px"}}>
+                    <U.UsersLinkWrap style={{ marginTop: "24px" }}>
                         <U.UsersLink to={"/users/login"}>로그인으로 돌아가기</U.UsersLink>
                     </U.UsersLinkWrap>
                 </U.UsersFormWrapper>
             </NoSidebarMain>
 
         </MainContainer>
-    ) 
+    )
 }
 
 export default PasswordFind
