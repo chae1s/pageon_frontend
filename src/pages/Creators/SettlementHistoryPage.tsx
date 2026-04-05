@@ -4,15 +4,13 @@ import { MainContainer, NoSidebarMain } from "../../styles/Layout.styles";
 import * as S from "./CreatorContent.styles";
 import api from "../../api/axiosInstance";
 import { SettlementDetail } from "../../types/Creator";
-import { MdFileDownload, MdArrowBack } from "react-icons/md";
+import { MdFileDownload } from "react-icons/md";
 import { formatMonth, formatCurrency, formatDate } from "../../utils/formatData";
 import { Pagination } from "../../types/Page";
 import PageNavigator from "../../components/Pagination/PageNavigator";
 
 // Icon casting for React 19 compatibility
 const DownloadIcon = MdFileDownload as any;
-const BackIcon = MdArrowBack as any;
-
 function SettlementHistoryPage() {
     const navigate = useNavigate();
     const [settlementDetails, setSettlementDetails] = useState<SettlementDetail[]>([]);
@@ -52,31 +50,6 @@ function SettlementHistoryPage() {
         const newParams = new URLSearchParams(searchParams);
         newParams.set("page", newPage.toString());
         setSearchParams(newParams);
-    }
-
-    const getPageNumbers = () => {
-        if (!pageData) return [];
-
-        const currentPage = pageData.pageNumber;
-        const totalPages = pageData.totalPages;
-
-        // 한 번에 보여줄 페이지 번호 개수
-        const pageBlockSize = 6;
-
-        const startPage = Math.floor(currentPage / pageBlockSize) * pageBlockSize;
-
-        let endPage = startPage + pageBlockSize - 1;
-
-        if (endPage >= totalPages) {
-            endPage = totalPages - 1;
-        }
-
-        const pages = [];
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(i)
-        }
-
-        return pages;
     }
 
     if (isLoading) {

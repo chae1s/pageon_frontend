@@ -10,16 +10,13 @@ function PageNavigator({ pageData, handlePageChange }: PaginationProps) {
 
     
 
+    const pageBlockSize = 10;
+    const currentPage = pageData.pageNumber;
+    const totalPages = pageData.totalPages;
+    const startPage = Math.floor(currentPage / pageBlockSize) * pageBlockSize;
+
     const getPageNumbers = () => {
         if (!pageData) return [];
-
-        const currentPage = pageData.pageNumber;
-        const totalPages = pageData.totalPages;
-
-        // 한 번에 보여줄 페이지 번호 개수
-        const pageBlockSize = 10;
-
-        const startPage = Math.floor(currentPage / pageBlockSize) * pageBlockSize;
 
         let endPage = startPage + pageBlockSize - 1;
 
@@ -49,11 +46,30 @@ function PageNavigator({ pageData, handlePageChange }: PaginationProps) {
         </svg>
     )
 
+    const DoublePrevIcon = () => (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M14 5l-4 5 4 5M9 5l-4 5 4 5" stroke="#222" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    )
+
+    const DoubleNextIcon = () => (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M6 5l4 5-4 5M11 5l4 5-4 5" stroke="#222" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    )
+
     if (pageData.totalPages <= 1) return null;
 
     return (
         <S.PaginationContainer>
             
+            <S.PaginationIconWrapper
+                onClick={() => handlePageChange(Math.max(0, startPage - pageBlockSize))}
+                disabled={startPage === 0}
+            >
+                <DoublePrevIcon />
+            </S.PaginationIconWrapper>
+
             <S.PaginationIconWrapper
                 onClick={() => handlePageChange(pageData.pageNumber - 1)}
                 disabled={pageData.first}
@@ -82,6 +98,14 @@ function PageNavigator({ pageData, handlePageChange }: PaginationProps) {
             >
                 <NextIcon />
             </S.PaginationIconWrapper>
+
+            <S.PaginationIconWrapper
+                onClick={() => handlePageChange(Math.min(pageData.totalPages - 1, startPage + pageBlockSize))}
+                disabled={startPage + pageBlockSize >= pageData.totalPages}
+            >
+                <DoubleNextIcon />
+            </S.PaginationIconWrapper>
+
         </S.PaginationContainer>
     )
 }

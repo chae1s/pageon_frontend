@@ -53,7 +53,7 @@ function ContentHome() {
 
         fetchData();
         // contentTypePath가 변경될 때마다 데이터를 다시 불러옵니다.
-        setActiveDay(initialDay); 
+        setActiveDay(initialDay);
     }, [contentTypePath, initialDayEng, contentLabel]);
 
     const handleDayClick = async (dayIndex: number) => {

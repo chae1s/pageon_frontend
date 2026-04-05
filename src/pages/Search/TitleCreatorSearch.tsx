@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import { MainContainer, NoSidebarMain, SortBtn } from "../../styles/Layout.styles";
+import React, { useEffect, useState } from "react";
+import { MainContainer, NoSidebarMain } from "../../styles/Layout.styles";
 import CustomSelect from "../../components/Common/CustomSelect";
 import { useSearchParams } from "react-router-dom";
 import api from "../../api/axiosInstance";
@@ -18,7 +18,7 @@ function TitleCreatorSearch() {
     let contentType = searchParams.get("contentType") || "all";
     const query = searchParams.get("query") || "";
     const sort = searchParams.get("sort") || "popular";
-    const page = parseInt(searchParams.get("page") || "0", 10) ;
+    const page = parseInt(searchParams.get("page") || "0", 10);
 
     const sortOptions = [
         { label: "최신 순", value: "latest" },
@@ -70,32 +70,6 @@ function TitleCreatorSearch() {
         setSearchParams(newParams);
     }
 
-    const getPageNumbers = () => {
-        if (!pageData) return [];
-
-        const currentPage = pageData.pageNumber;
-        const totalPages = pageData.totalPages;
-
-        // 한 번에 보여줄 페이지 번호 개수
-        const pageBlockSize = 6;
-
-        const startPage = Math.floor(currentPage / pageBlockSize) * pageBlockSize;
-
-        let endPage = startPage + pageBlockSize - 1;
-
-        if (endPage >= totalPages) {
-            endPage = totalPages - 1;
-        }
-
-        const pages = [];
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(i)
-        }
-
-        return pages;
-    }
-
-    const pageNumbers = getPageNumbers();
 
     return (
         <MainContainer>
@@ -127,9 +101,9 @@ function TitleCreatorSearch() {
                     </S.SelectSortBtnGroup>
                 </S.SelectSortSection>
                 {pageData && (
-                    <SearchContentList 
-                        contents={pageData.content} 
-                        totalElements={pageData.totalElements} 
+                    <SearchContentList
+                        contents={pageData.content}
+                        totalElements={pageData.totalElements}
                         emptyMessage={emptyMessage}
                     />
                 )}
