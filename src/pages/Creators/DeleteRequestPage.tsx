@@ -135,7 +135,7 @@ function DeleteRequestPage() {
                             checked={isAgreed}
                             onChange={(e) => setIsAgreed(e.target.checked)}
                         />
-                        <span>삭제 시 복구가 불가능함에 동의합니다.</span>
+                        <span>삭제 요청 승인 후 복구가 불가능함에 동의합니다.</span>
                     </S.DeleteAgreementWrap>
 
                     <S.SubmitButtonWrap>

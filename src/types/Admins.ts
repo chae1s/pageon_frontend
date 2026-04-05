@@ -17,3 +17,18 @@ export interface SettlementDetail {
     failedReason: string;
     resolved: boolean;
 }
+
+export interface DeletionRequestSummary {
+    requestId: number;
+    contentTitle: string;
+    author: string;
+    deleteStatus: string;
+    requestedAt: string;
+    processedAt: string;
+}
+
+export interface DeletionRequestDetail {
+    requestId: number;
+    deleteReason: string;
+    reasonDetail: string;
+}

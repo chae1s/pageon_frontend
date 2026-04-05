@@ -52,6 +52,7 @@ import EpisodeDetailPage from "./pages/Creators/EpisodeDetailPage";
 import SettlementHistoryPage from "./pages/Creators/SettlementHistoryPage";
 import AdminHeader from "./components/Headers/AdminHeader";
 import AdminSettlementPage from "./pages/Admins/AdminSettlementPage";
+import AdminDeletionRequestPage from "./pages/Admins/AdminDeletionRequestPage";
 
 function Router() {
     const location = useLocation();
@@ -140,6 +141,7 @@ function Router() {
 
                 <Route element={<RoleRoute allowedRoles={["ROLE_ADMIN"]} />}>
                     <Route path="/admin/settlements" element={<AdminSettlementPage />} />
+                    <Route path="/admin/contents/deletion-requests" element={<AdminDeletionRequestPage />} />
                 </Route>
 
             </Routes>

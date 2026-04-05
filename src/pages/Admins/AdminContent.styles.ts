@@ -223,3 +223,95 @@ export const RetryButton = styled.button`
         cursor: not-allowed;
     }
 `;
+
+// --- Deletion Request Specific Styles ---
+
+export const DeletionColId = styled.col`
+    width: 60px;
+    text-align: center;
+`;
+
+export const DeletionColTitle = styled.col`
+    width: auto;
+    text-align: left;
+`;
+
+export const DeletionColAuthor = styled.col`
+    width: 200px;
+    text-align: center;
+`;
+
+export const DeletionColStatus = styled.col`
+    width: 120px;
+    text-align: center;
+`;
+
+export const DeletionColRequestDate = styled.col`
+    width: 150px;
+    text-align: center;
+`;
+
+export const DeletionColProcessDate = styled.col`
+    width: 150px;
+    text-align: center;
+`;
+
+export const DeletionTdTitle = styled.td`
+    padding: 13px 15px;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    font-weight: 500;
+`;
+
+export const DeletionTh = styled.th`
+    padding: 12px 15px;
+    text-align: center;
+    font-weight: 600;
+    color: #333;
+    
+    &:nth-child(2) {
+        text-align: left;
+    }
+`;
+
+export const DeletionActionContainer = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+`;
+
+export const DangerButton = styled.button`
+    padding: 8px 16px;
+    background-color: #FC5858;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: #e54c4c;
+    }
+`;
+
+export const RejectButton = styled.button`
+    padding: 8px 16px;
+    background-color: #f1f3f5;
+    color: #495057;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+        background-color: #e9ecef;
+        color: #212529;
+    }
+`;
+
