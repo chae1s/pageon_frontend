@@ -14,7 +14,12 @@ export const PaginationIconWrapper = styled.button`
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    background-color: transparent;
 
+    &:disabled {
+        background-color: transparent;
+        opacity: 0.8;
+    }
 `
 
 export const PaginationNumberList = styled.ul`

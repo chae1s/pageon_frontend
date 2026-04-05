@@ -22,7 +22,7 @@ function DeleteContentList() {
 
     const statusMap: Record<string, string> = {
         PENDING: "대기 중",
-        COMPLETED: "완료",
+        APPROVED: "승인",
         REJECTED: "반려",
         CANCELED: "취소됨",
     };
