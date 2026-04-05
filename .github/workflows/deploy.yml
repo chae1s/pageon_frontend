@@ -25,6 +25,7 @@ jobs:
         run: npm run build
         env:
           CI: false
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
       - name: AWS 자격증명 설정
         uses: aws-actions/configure-aws-credentials@v2
