@@ -5,7 +5,7 @@ import { resolve } from "path";
 
 
 const api: AxiosInstance = axios.create({
-    baseURL: (process.env.REACT_APP_API_URL || 'http://15.165.48.236') + '/api',
+    baseURL: (process.env.REACT_APP_API_URL || 'http://52.79.176.106') + '/api',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
