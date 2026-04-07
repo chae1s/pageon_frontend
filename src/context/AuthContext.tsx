@@ -4,13 +4,13 @@ interface AuthContextType {
     isAuthenticated: boolean;
     accessToken: string | null;
     roles: string[];
-    login: (token:string, roles: string[], provider:string) => void;
+    login: (token: string, roles: string[], provider: string) => void;
     logout: () => void;
 }
 
 const Authcontext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({children} : {children: ReactNode}) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
 
     const [roles, setRoles] = useState<string[]>(() => {
@@ -23,7 +23,7 @@ export const AuthProvider = ({children} : {children: ReactNode}) => {
 
     const isAuthenticated = !!accessToken;
 
-    const login = (token:string, roles: string[], provider:string) => {
+    const login = (token: string, roles: string[], provider: string) => {
         localStorage.setItem("accessToken", token);
         localStorage.setItem("roles", JSON.stringify(roles));
         localStorage.setItem("provider", provider)
@@ -50,7 +50,7 @@ export const AuthProvider = ({children} : {children: ReactNode}) => {
     }, []);
 
     return (
-        <Authcontext.Provider value={{isAuthenticated, accessToken, roles, login, logout}}>
+        <Authcontext.Provider value={{ isAuthenticated, accessToken, roles, login, logout }}>
             {children}
         </Authcontext.Provider>
     )
@@ -58,7 +58,7 @@ export const AuthProvider = ({children} : {children: ReactNode}) => {
 
 export const useAuth = () => {
     const context = useContext(Authcontext);
-    if (!context) throw new Error ("useAuth must be used within an AuthProvider");
+    if (!context) throw new Error("useAuth must be used within an AuthProvider");
 
     return context;
 }
