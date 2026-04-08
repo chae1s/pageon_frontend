@@ -122,17 +122,17 @@ function Login() {
 
     const handleKakaoLogin = () => {
         localStorage.setItem("redirectPath", from);
-        window.location.href = "http://localhost:8080/oauth2/authorization/kakao";
+        window.location.href = "https://api.pageon.store/oauth2/authorization/kakao";
     };
 
     const handleNaverLogin = () => {
         localStorage.setItem("redirectPath", from);
-        window.location.href = "http://localhost:8080/oauth2/authorization/naver";
+        window.location.href = "https://api.pageon.store/oauth2/authorization/naver";
     };
 
     const handleGoogleLogin = () => {
         localStorage.setItem("redirectPath", from);
-        window.location.href = "http://localhost:8080/oauth2/authorization/google";
+        window.location.href = "https://api.pageon.store/oauth2/authorization/google";
     };
 
 
