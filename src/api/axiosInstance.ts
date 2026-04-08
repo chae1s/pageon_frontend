@@ -5,12 +5,17 @@ import { resolve } from "path";
 
 
 const api: AxiosInstance = axios.create({
-    baseURL: (process.env.REACT_APP_API_URL || 'http://52.79.176.106') + '/api',
+    baseURL: (process.env.REACT_APP_API_URL || 'http://localhost:8080') + '/api',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
     },
 })
+
+const refreshApi = axios.create({
+    baseURL: (process.env.REACT_APP_API_URL || 'http://localhost:8080') + '/api',
+    withCredentials: true,
+});
 
 api.interceptors.request.use(
     (config) => {
@@ -55,6 +60,10 @@ api.interceptors.response.use(
 
         if (error.response?.status === 401 && !originalRequest._retry) {
 
+            // 로그인 요청 실패면 refresh 시도 안 함
+            if (originalRequest.url?.includes('/users/login')) {
+                return Promise.reject(error);
+            }
             if (isRefreshing) {
                 // 이미 갱신 요청 진행 중이면, 현재 요청을 큐에 추가
                 return new Promise((resolve, reject) => {
@@ -74,7 +83,7 @@ api.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const response = await api.post("/auth/refresh", {}, {
+                const response = await refreshApi.post("/auth/refresh", {}, {
                     withCredentials: true
                 });
 

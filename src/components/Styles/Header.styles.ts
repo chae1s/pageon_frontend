@@ -164,6 +164,18 @@ export const HeaderEtcLink = styled(Link)`
   display: inline-flex;
   align-items: center;
   margin: 12px 0px 12px 24px;
+  position: relative;
+`
+
+export const NotificationDot = styled.div`
+  position: absolute;
+  top: -2px;
+  right: -5px;
+  width: 6px;
+  height: 6px;
+  background-color: #ff4d4f;
+  border-radius: 50%;
+  border: 1px solid #fff;
 `
 
 export const HeaderEtcLinkText = styled.span`

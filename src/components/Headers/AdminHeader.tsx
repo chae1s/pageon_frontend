@@ -5,6 +5,8 @@ import styled from "styled-components";
 import * as H from "../Styles/Header.styles"
 import logo from '../../assets/admin_logo.png'
 import axios from "axios";
+import { useNotification } from "../../context/NotificationContext";
+import NotificationBubble from "./NotificationBubble";
 
 const CreatorHeaderSpace = styled.div`
     width: 260px;
@@ -16,6 +18,14 @@ const CreatorHeaderSpace = styled.div`
 
 function AdminHeader() {
     const { isAuthenticated, logout } = useAuth();
+    const { unreadCount, latestMessage, latestLink, clearNotifications, clearLatestMessage, showLatest } = useNotification();
+    const hasNew = unreadCount > 0;
+
+    // 알림 디버깅용 로그
+    useEffect(() => {
+        console.log("🔔 [AdminHeader] Notification Status:", { unreadCount, latestMessage, hasNew });
+    }, [unreadCount, latestMessage, hasNew]);
+
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -87,8 +97,27 @@ function AdminHeader() {
                         </H.HeaderNavLink>
                     </H.HeaderLinkList>
                     <H.HeaderEtcLinkList>
-                        <H.HeaderEtcLink to={"/"}>
+                        <H.HeaderEtcLink 
+                            to={"#"} 
+                            onClick={(e) => {
+                                e.preventDefault();
+                                clearNotifications();
+                                showLatest();
+                            }}
+                        >
                             <H.HeaderEtcLinkText>알림</H.HeaderEtcLinkText>
+                            {hasNew && <H.NotificationDot />}
+                            {latestMessage && (
+                                <NotificationBubble 
+                                    message={latestMessage} 
+                                    link={latestLink}
+                                    onClose={(e: React.MouseEvent) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        clearLatestMessage();
+                                    }} 
+                                />
+                            )}
                         </H.HeaderEtcLink>
                         <H.HeaderEtcLink to={"#logout"} onClick={handleLogoutClick}>
                             <H.HeaderEtcLinkText>로그아웃</H.HeaderEtcLinkText>
