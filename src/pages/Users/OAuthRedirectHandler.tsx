@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useEffect } from "react";
-import axios from "axios";
+import api from "../../api/axiosInstance";
 
 const OAuthRedirectHandler: React.FC = () => {
     const { login } = useAuth();
@@ -21,8 +21,8 @@ const OAuthRedirectHandler: React.FC = () => {
                         userId: userId,
                         tempCode: tempCode,
                     };
-                    const response = await axios.post("/api/auth/exchange", tempRequest);
-                    
+                    const response = await api.post("/auth/exchange", tempRequest);
+
                     const jwtInfo = response.data;
 
                     if (jwtInfo && jwtInfo.isLogin) {
@@ -49,7 +49,7 @@ const OAuthRedirectHandler: React.FC = () => {
         };
 
         fetchToken();
-        
+
     }, []);
 
     return <div></div>;
