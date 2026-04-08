@@ -5,6 +5,8 @@ import styled from "styled-components";
 import * as H from "../Styles/Header.styles"
 import logo from '../../assets/creator_logo.png'
 import axios from "axios";
+import { useNotification } from "../../context/NotificationContext";
+import NotificationBubble from "./NotificationBubble";
 
 const CreatorHeaderSpace = styled.div`
     width: 260px;
@@ -16,6 +18,8 @@ const CreatorHeaderSpace = styled.div`
 
 function CreatorHeader() {
     const { isAuthenticated, logout } = useAuth();
+    const { unreadCount, latestMessage, latestLink, clearNotifications, clearLatestMessage, showLatest } = useNotification();
+    const hasNew = unreadCount > 0;
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -27,6 +31,11 @@ function CreatorHeader() {
 
     // 수익 관리 활성화 조건: /creators/revenue로 시작하지만 /payout-account는 포함하지 않음
     const isRevenueActive = location.pathname.startsWith('/creators/revenue');
+
+    // 알림 디버깅용 로그
+    useEffect(() => {
+        console.log("🔔 [CreatorHeader] Notification Status:", { unreadCount, latestMessage, hasNew });
+    }, [unreadCount, latestMessage, hasNew]);
 
     const handleLogoutClick = async (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
         e.preventDefault();
@@ -98,8 +107,27 @@ function CreatorHeader() {
                         </H.HeaderNavLink>
                     </H.HeaderLinkList>
                     <H.HeaderEtcLinkList>
-                        <H.HeaderEtcLink to={"/"}>
+                        <H.HeaderEtcLink 
+                            to={"#"} 
+                            onClick={(e) => {
+                                e.preventDefault();
+                                clearNotifications();
+                                showLatest();
+                            }}
+                        >
                             <H.HeaderEtcLinkText>알림</H.HeaderEtcLinkText>
+                            {hasNew && <H.NotificationDot />}
+                            {latestMessage && (
+                                <NotificationBubble 
+                                    message={latestMessage} 
+                                    link={latestLink}
+                                    onClose={(e: React.MouseEvent) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        clearLatestMessage();
+                                    }} 
+                                />
+                            )}
                         </H.HeaderEtcLink>
                         <H.HeaderEtcLink to={"/"}>
                             <H.HeaderEtcLinkText>내 프로필</H.HeaderEtcLinkText>

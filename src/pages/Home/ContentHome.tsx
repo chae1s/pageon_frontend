@@ -6,6 +6,8 @@ import { SimpleContent, RankingContent } from "../../types/Content";
 import ThumbnailContentList from "../../components/Contents/ThumbnailContentList";
 import RankingContentList from "../../components/Contents/RankingContentList";
 import api from "../../api/axiosInstance";
+import webtoonBanner from "../../assets/webtoon_banner.png";
+import webnovelBanner from "../../assets/webnovel_banner.png";
 
 function ContentHome() {
     const location = useLocation();
@@ -29,32 +31,72 @@ function ContentHome() {
 
     const [activeDay, setActiveDay] = useState<string>(initialDay);
 
+    // 요일별 데이터 조회
     useEffect(() => {
-        async function fetchData() {
+        const fetchDaily = async () => {
             try {
-                const [dailyRes, newRes, masterpieceRes, keywordRes, rankingRes] = await Promise.all([
-                    api.get(`/${contentTypePath}/daily/${initialDayEng}`),
-                    api.get(`/${contentTypePath}/new`),
-                    api.get(`/${contentTypePath}/completed`),
-                    api.get(`/${contentTypePath}/keyword`),
-                    api.get(`/${contentTypePath}/hourly-ranking`)
-                ]);
-
-                setDailyContents(dailyRes.data);
-                setNewContents(newRes.data);
-                setMasterpieceContents(masterpieceRes.data);
-                setKeywordName(keywordRes.data.keyword);
-                setKeywordContents(keywordRes.data.contents.content);
-                setRankingContents(rankingRes.data);
+                const res = await api.get(`/${contentTypePath}/daily/${initialDayEng}`);
+                setDailyContents(res.data);
             } catch (error) {
-                console.error(`${contentLabel} 데이터 조회 실패: `, error);
+                console.error(`${contentLabel} 요일별 데이터 조회 실패: `, error);
             }
-        }
-
-        fetchData();
-        // contentTypePath가 변경될 때마다 데이터를 다시 불러옵니다.
+        };
+        fetchDaily();
         setActiveDay(initialDay);
-    }, [contentTypePath, initialDayEng, contentLabel]);
+    }, [contentTypePath, initialDayEng, contentLabel, initialDay]);
+
+    // 신작 데이터 조회
+    useEffect(() => {
+        const fetchNew = async () => {
+            try {
+                const res = await api.get(`/${contentTypePath}/new`);
+                setNewContents(res.data);
+            } catch (error) {
+                console.error(`${contentLabel} 신작 데이터 조회 실패: `, error);
+            }
+        };
+        fetchNew();
+    }, [contentTypePath, contentLabel]);
+
+    // 정주행 명작 데이터 조회
+    useEffect(() => {
+        const fetchMasterpiece = async () => {
+            try {
+                const res = await api.get(`/${contentTypePath}/completed`);
+                setMasterpieceContents(res.data);
+            } catch (error) {
+                console.error(`${contentLabel} 명작 데이터 조회 실패: `, error);
+            }
+        };
+        fetchMasterpiece();
+    }, [contentTypePath, contentLabel]);
+
+    // 키워드 추천 데이터 조회
+    useEffect(() => {
+        const fetchKeyword = async () => {
+            try {
+                const res = await api.get(`/${contentTypePath}/keyword`);
+                setKeywordName(res.data.keyword);
+                setKeywordContents(res.data.contents.content);
+            } catch (error) {
+                console.error(`${contentLabel} 키워드 데이터 조회 실패: `, error);
+            }
+        };
+        fetchKeyword();
+    }, [contentTypePath, contentLabel]);
+
+    // 실시간 랭킹 데이터 조회
+    useEffect(() => {
+        const fetchRanking = async () => {
+            try {
+                const res = await api.get(`/${contentTypePath}/hourly-ranking`);
+                setRankingContents(res.data);
+            } catch (error) {
+                console.error(`${contentLabel} 실시간 랭킹 데이터 조회 실패: `, error);
+            }
+        };
+        fetchRanking();
+    }, [contentTypePath, contentLabel]);
 
     const handleDayClick = async (dayIndex: number) => {
         const dayName = dayOfWeekNames[dayIndex];
@@ -74,25 +116,11 @@ function ContentHome() {
         <MainContainer>
             <NoSidebarMain>
                 <H.HomeBanner>
-                    <div className="banner-text">
-                        <h1>
-                            인기 웹툰과 웹소설을<br />한 곳에서 즐기세요
-                        </h1>
-                        <p>
-                            최신 인기작부터 다양한 장르의 작품까지<br />
-                            지금 바로 감상해보세요!
-                        </p>
-                        <div className="banner-btns">
-                            <button className="go-webtoon-btn">웹툰 보러가기</button>
-                            <button className="go-webnovel-btn">웹소설 보러가기</button>
-                        </div>
-                    </div>
-                    <div className="banner-image">
-                        <img
-                            src="https://cdn.ridicdn.net/cover/1/cover13/2023/12/cover_1000000001_1701400000.jpg"
-                            alt="메인 배너"
-                        />
-                    </div>
+                    <img
+                        key={isWebtoon ? "webtoon" : "webnovel"}
+                        src={isWebtoon ? webtoonBanner : webnovelBanner}
+                        alt="메인 배너"
+                    />
                 </H.HomeBanner>
 
                 <H.SectionBookList>

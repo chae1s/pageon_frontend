@@ -1,10 +1,11 @@
-import React, {useState, useEffect, useCallback} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import * as U from "./Users.styles"
 import { MainContainer, NoSidebarMain } from "../../styles/Layout.styles";
 import { SignupRequest } from "../../types/User";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from "../../api/axiosInstance";
 
 const SignupNessesary = styled.div`
     margin-left: 5px;
@@ -38,7 +39,7 @@ const UsersFormGroupGender = styled.div`
     display: flex;
 `
 
-const UsersFormGenderLabelLeft = styled.label<{selected: boolean}>`
+const UsersFormGenderLabelLeft = styled.label<{ selected: boolean }>`
     width: 50%;
     height: 47px;
     overflow: hidden;
@@ -58,7 +59,7 @@ const UsersFormGenderLabelLeft = styled.label<{selected: boolean}>`
 
 `
 
-const UsersFormGenderLabelRight = styled.label<{selected: boolean}>`
+const UsersFormGenderLabelRight = styled.label<{ selected: boolean }>`
     width: 50%;
     height: 47px;
     overflow: hidden;
@@ -154,12 +155,12 @@ function SignupEmail() {
     const [isNicknameDuplicate, setIsNicknameDuplicate] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    
+
 
     const validate = useCallback((data: SignupRequest, checkRequired = false) => {
         const newErrors: ErrorMap = {};
 
-        const {email, password, confirmPassword, nickname, birthDate} = data;
+        const { email, password, confirmPassword, nickname, birthDate } = data;
 
         // 이메일 유효성 검사
         if (checkRequired && !email) {
@@ -195,41 +196,41 @@ function SignupEmail() {
 
         if (birthDate) {
             if (birthDate.length !== 8) {
-              newErrors.birthDate = "생년월일은 8자리로 입력해주세요.";
+                newErrors.birthDate = "생년월일은 8자리로 입력해주세요.";
             } else {
-              const year = birthDate.substring(0, 4);
-              const month = birthDate.substring(4, 6);
-              const day = birthDate.substring(6, 8);
-              const birthDateObj = new Date(
-                parseInt(year, 10),
-                parseInt(month, 10) - 1,
-                parseInt(day, 10)
-              );
-              const today = new Date();
-              today.setHours(0, 0, 0, 0);
-      
-              if (
-                birthDateObj.getFullYear() !== parseInt(year, 10) ||
-                birthDateObj.getMonth() !== parseInt(month, 10) - 1 ||
-                birthDateObj.getDate() !== parseInt(day, 10)
-              ) {
-                newErrors.birthDate = "유효하지 않은 생년월일입니다.";
-              } else if (birthDateObj > today) {
-                newErrors.birthDate = "유효하지 않은 생년월일입니다.";
-              }
+                const year = birthDate.substring(0, 4);
+                const month = birthDate.substring(4, 6);
+                const day = birthDate.substring(6, 8);
+                const birthDateObj = new Date(
+                    parseInt(year, 10),
+                    parseInt(month, 10) - 1,
+                    parseInt(day, 10)
+                );
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (
+                    birthDateObj.getFullYear() !== parseInt(year, 10) ||
+                    birthDateObj.getMonth() !== parseInt(month, 10) - 1 ||
+                    birthDateObj.getDate() !== parseInt(day, 10)
+                ) {
+                    newErrors.birthDate = "유효하지 않은 생년월일입니다.";
+                } else if (birthDateObj > today) {
+                    newErrors.birthDate = "유효하지 않은 생년월일입니다.";
+                }
             }
-          }
+        }
 
         return newErrors;
-        
+
     }, []);
 
-    const checkEmailDuplicate = async (email:string) => {
+    const checkEmailDuplicate = async (email: string) => {
         if (!email) return;
 
 
         try {
-            const response = await axios.get(`/api/users/check-email?email=${encodeURIComponent(email)}`);
+            const response = await api.get(`/users/check-email?email=${encodeURIComponent(email)}`);
 
             if (response.data.isEmailDuplicate) {
                 setIsEmailDuplicate(true);
@@ -240,7 +241,7 @@ function SignupEmail() {
             } else {
                 setIsEmailDuplicate(false);
                 setErrors(prev => {
-                    const newErrors = {...prev}
+                    const newErrors = { ...prev }
                     delete newErrors.email;
 
                     return newErrors;
@@ -252,10 +253,10 @@ function SignupEmail() {
                 ...prev,
                 email: "이미 사용 중인 이메일입니다."
             }));
-        } 
+        }
     };
 
-    const checkNicknameDuplicate = async (nickname:string) => {
+    const checkNicknameDuplicate = async (nickname: string) => {
         if (!nickname) return;
 
         try {
@@ -270,7 +271,7 @@ function SignupEmail() {
             } else {
                 setIsNicknameDuplicate(false);
                 setErrors(prev => {
-                    const newErrors = {...prev}
+                    const newErrors = { ...prev }
                     delete newErrors.nickname;
 
                     return newErrors;
@@ -282,11 +283,11 @@ function SignupEmail() {
                 ...prev,
                 nickname: "이미 사용 중인 닉네임입니다."
             }));
-        } 
+        }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value, type, checked} = e.target;
+        const { name, value, type, checked } = e.target;
 
         setFormData((prevstate) => ({
             ...prevstate,
@@ -309,7 +310,7 @@ function SignupEmail() {
         if (email) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (emailRegex.test(email)) {
-              checkEmailDuplicate(email);
+                checkEmailDuplicate(email);
             }
         }
     }
@@ -317,7 +318,7 @@ function SignupEmail() {
     const handleNicknameBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
         const nickname = e.target.value.trim();
         if (nickname) {
-        checkNicknameDuplicate(nickname);
+            checkNicknameDuplicate(nickname);
         }
     }
 
@@ -342,7 +343,7 @@ function SignupEmail() {
         if (Object.keys(finalErrors).length > 0) {
             return;
         }
-        
+
         try {
             const response = await axios.post('/api/users/signup', {
                 email: formData.email,
@@ -364,12 +365,12 @@ function SignupEmail() {
                 console.error("예상치 못한 에러 발생: ", error);
                 alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
             }
-        } 
-        
+        }
+
     }
 
 
-    const getInputclassName = (fieldName:keyof SignupRequest) => {
+    const getInputclassName = (fieldName: keyof SignupRequest) => {
         const rawValue = formData[fieldName];
         const value = typeof rawValue === "string" ? rawValue.trim() : "";
 
@@ -469,7 +470,7 @@ function SignupEmail() {
                         <U.UsersFormGroup>
                             <U.UsersFormLabel htmlFor="nickname">닉네임 <NessesaryCheck>*</NessesaryCheck></U.UsersFormLabel>
                             <U.UsersFormInput
-                                validation={getInputclassName("nickname")} 
+                                validation={getInputclassName("nickname")}
                                 type="nickname"
                                 id="nickname"
                                 name="nickname"
@@ -527,7 +528,7 @@ function SignupEmail() {
                         <UsersTerms>
                             <TermsContent>
                                 제 1 조 (목적)<br /><br />
-                                이 약관은 pageOn (이하 "회사")가 제공하는 웹소설 및 웹툰 플랫폼(이하 "서비스") 이용과 관련하여 
+                                이 약관은 pageOn (이하 "회사")가 제공하는 웹소설 및 웹툰 플랫폼(이하 "서비스") 이용과 관련하여
                                 회사와 회원 간의 권리, 의무 및 기타 필요한 사항을 규정함을 목적으로 합니다.
                                 <br />
                                 <br />
@@ -626,10 +627,10 @@ function SignupEmail() {
                             </TermsContent>
                             <TermsLabel htmlFor="termsAgreed">
                                 <TermsInput
-                                    type="checkbox" 
+                                    type="checkbox"
                                     id="termsAgreed"
                                     name="termsAgreed"
-                                    checked = {formData.termsAgreed}
+                                    checked={formData.termsAgreed}
                                     required
                                     onChange={handleChange}
                                 />

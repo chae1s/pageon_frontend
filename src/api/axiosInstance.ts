@@ -1,21 +1,26 @@
 import { rejects } from "assert";
-import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig} from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { error } from "console";
 import { resolve } from "path";
 
 
 const api: AxiosInstance = axios.create({
-    baseURL: '/api',
+    baseURL: (process.env.REACT_APP_API_URL || 'http://localhost:8080') + '/api',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
     },
 })
 
+const refreshApi = axios.create({
+    baseURL: (process.env.REACT_APP_API_URL || 'http://localhost:8080') + '/api',
+    withCredentials: true,
+});
+
 api.interceptors.request.use(
     (config) => {
         const accessToken = localStorage.getItem('accessToken');
-        
+
         if (accessToken && config.headers) {
             config.headers.Authorization = `Bearer ${accessToken}`
         }
@@ -51,22 +56,26 @@ api.interceptors.response.use(
     },
 
     async (error) => {
-        const originalRequest = error.config as InternalAxiosRequestConfig & {_retry?:boolean};
+        const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
         if (error.response?.status === 401 && !originalRequest._retry) {
 
+            // 로그인 요청 실패면 refresh 시도 안 함
+            if (originalRequest.url?.includes('/users/login')) {
+                return Promise.reject(error);
+            }
             if (isRefreshing) {
                 // 이미 갱신 요청 진행 중이면, 현재 요청을 큐에 추가
                 return new Promise((resolve, reject) => {
-                    failedQueue.push({resolve, reject});
+                    failedQueue.push({ resolve, reject });
                 })
-                .then(token => {
-                    if (originalRequest.headers) {
-                        originalRequest.headers.Authorization = `Bearer ${token}`;
-                    }
+                    .then(token => {
+                        if (originalRequest.headers) {
+                            originalRequest.headers.Authorization = `Bearer ${token}`;
+                        }
 
-                    return api(originalRequest);
-                })
+                        return api(originalRequest);
+                    })
             }
 
             // 이 요청이 첫 번째 401 요청인 경우
@@ -74,7 +83,7 @@ api.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const response = await axios.post("/api/auth/refresh", {}, {
+                const response = await refreshApi.post("/auth/refresh", {}, {
                     withCredentials: true
                 });
 
@@ -101,8 +110,8 @@ api.interceptors.response.use(
             } finally {
                 isRefreshing = false;
             }
-            
-        } 
+
+        }
 
         return Promise.reject(error);
     }

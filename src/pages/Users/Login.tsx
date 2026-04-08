@@ -3,9 +3,10 @@ import styled from "styled-components";
 import * as U from "./Users.styles"
 import { MainContainer, NoSidebarMain } from "../../styles/Layout.styles";
 import { LoginRequest } from "../../types/User";
-import { useNavigate, Link, useLocation} from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
+import api from "../../api/axiosInstance";
 
 
 // styled 코드
@@ -57,8 +58,8 @@ const SocialBtnItem = styled.button`
 
 function Login() {
 
-    const {login} = useAuth();
-    const [formData, setFormData] = useState<LoginRequest> ({
+    const { login } = useAuth();
+    const [formData, setFormData] = useState<LoginRequest>({
         email: "",
         password: ""
     });
@@ -70,7 +71,7 @@ function Login() {
     const from = location.state?.from || "/";
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
 
         setFormData((prev) => ({
             ...prev,
@@ -82,41 +83,41 @@ function Login() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
-        
+
         try {
-            const response = await axios.post("/api/users/login", {
+            const response = await api.post("/users/login", {
                 email: formData.email,
                 password: formData.password
             });
-    
+
             const jwtInfo = response.data.success;
-            
+
             if (jwtInfo && jwtInfo.isLogin) {
                 login(jwtInfo.accessToken, jwtInfo.userRoles, jwtInfo.oauthProvider);
-    
+
                 const isAtMain = !from || from === "/" || from === "";
-    
+
                 let targetPath = from;
-    
+
                 if (isAtMain && jwtInfo.targetPath) {
-                    targetPath = jwtInfo.targetPath 
+                    targetPath = jwtInfo.targetPath
                 } else if (!from) {
-                    targetPath = "/"; 
+                    targetPath = "/";
                 }
-    
+
                 alert("로그인에 성공하였습니다.");
-                
+
                 setTimeout(() => {
                     navigate(targetPath, { replace: true });
                 }, 100);
-    
+
             } else {
                 setError("이메일 또는 비밀번호가 올바르지 않습니다.");
             }
         } catch (err) {
             console.error(err);
             setError("이메일 또는 비밀번호가 올바르지 않습니다.");
-        } 
+        }
     };
 
     const handleKakaoLogin = () => {
@@ -138,27 +139,27 @@ function Login() {
     // 소셜 로그인 아이콘
     const KakaoIcon = () => (
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-            <ellipse cx="20" cy="20" rx="20" ry="20" fill="#FEE500"/>
-            <ellipse cx="20" cy="20" rx="16" ry="13" fill="#FEE500"/>
-            <ellipse cx="20" cy="20" rx="16" ry="13" fill="#FEE500"/>
+            <ellipse cx="20" cy="20" rx="20" ry="20" fill="#FEE500" />
+            <ellipse cx="20" cy="20" rx="16" ry="13" fill="#FEE500" />
+            <ellipse cx="20" cy="20" rx="16" ry="13" fill="#FEE500" />
             <g transform="translate(13.5,12)">
-               <path d="M9 1C4.03 1 0 4.186 0 8.118c0 2.558 1.706 4.8 4.269 6.055-.189.702-.682 2.546-.78 2.94-.123.49.178.484.377.353.155-.104 2.466-1.676 3.463-2.355.543.08 1.1.123 1.671.123 4.97 0 9-3.186 9-7.118C18 4.186 13.97 1 9 1z" fill="#371C1D" />
+                <path d="M9 1C4.03 1 0 4.186 0 8.118c0 2.558 1.706 4.8 4.269 6.055-.189.702-.682 2.546-.78 2.94-.123.49.178.484.377.353.155-.104 2.466-1.676 3.463-2.355.543.08 1.1.123 1.671.123 4.97 0 9-3.186 9-7.118C18 4.186 13.97 1 9 1z" fill="#371C1D" />
             </g>
-        </svg> 
+        </svg>
     );
 
     const NaverIcon = () => (
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-           <circle cx="20" cy="20" r="20" fill="#03C75A"/>
+            <circle cx="20" cy="20" r="20" fill="#03C75A" />
             <g transform="translate(13,12)">
-                <path d="M2 1h4.5l5.5 7.5V1H16v14h-4.5L6 7.5V15H2V1z" fill="#fff"/>
+                <path d="M2 1h4.5l5.5 7.5V1H16v14h-4.5L6 7.5V15H2V1z" fill="#fff" />
             </g>
         </svg>
     );
-    
+
     const GoogleIcon = () => (
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="20" r="20" fill="#fff"/>
+            <circle cx="20" cy="20" r="20" fill="#fff" />
             <g transform="translate(11,9) scale(0.45)">
                 <g>
                     <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
@@ -179,7 +180,7 @@ function Login() {
                     <U.UsersForm onSubmit={handleSubmit}>
                         <U.UsersFormGroup>
                             <U.UsersFormLabel htmlFor="email">이메일</U.UsersFormLabel>
-                            <U.UsersFormInput 
+                            <U.UsersFormInput
                                 type="email"
                                 id="email"
                                 name="email"
@@ -190,7 +191,7 @@ function Login() {
                         </U.UsersFormGroup>
                         <U.UsersFormGroup>
                             <U.UsersFormLabel htmlFor="password">비밀번호</U.UsersFormLabel>
-                            <U.UsersFormInput 
+                            <U.UsersFormInput
                                 type="password"
                                 id="password"
                                 name="password"
@@ -200,7 +201,7 @@ function Login() {
                             />
                         </U.UsersFormGroup>
                         <div>
-                            <U.ErrorMessage style={{marginTop: "8px"}}>
+                            <U.ErrorMessage style={{ marginTop: "8px" }}>
                                 {error && (error)}
                             </U.ErrorMessage>
                         </div>
@@ -215,24 +216,24 @@ function Login() {
                         <Divider></Divider>
                     </DividerWrapper>
                     <SocialBtnGroup>
-                        <SocialBtnItem 
-                            type="button" 
+                        <SocialBtnItem
+                            type="button"
                             onClick={handleKakaoLogin}
-                            style={{background: "#FEE500"}}
+                            style={{ background: "#FEE500" }}
                         >
                             <KakaoIcon />
                         </SocialBtnItem>
-                        <SocialBtnItem 
-                            type="button" 
+                        <SocialBtnItem
+                            type="button"
                             onClick={handleNaverLogin}
-                            style={{background: "#03C75A"}}
+                            style={{ background: "#03C75A" }}
                         >
                             <NaverIcon />
                         </SocialBtnItem>
                         <SocialBtnItem
-                            type="button" 
+                            type="button"
                             onClick={handleGoogleLogin}
-                            style={{border: "1px solid #eee"}}
+                            style={{ border: "1px solid #eee" }}
                         >
                             <GoogleIcon />
                         </SocialBtnItem>

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { MainContainer, SidebarMain } from "../../styles/Layout.styles";
 import * as M from "./MyPage.styles"
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "../../components/Sidebars/MyPageSidebar";
 import "./MyPage.css"
+import api from "../../api/axiosInstance";
 
 
 function PasswordCheck() {
@@ -28,11 +29,7 @@ function PasswordCheck() {
         }
 
         try {
-            const response = await axios.post("/api/users/check-password", {password: password}, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
-                }
-            });
+            const response = await api.post("/users/check-password", { password: password });
 
             console.log(response.data)
 
@@ -57,14 +54,14 @@ function PasswordCheck() {
                     <M.PasswordCheckForm onSubmit={handleSubmit}>
                         <div>
                             <M.PasswordCheckLabel htmlFor="password">비밀번호</M.PasswordCheckLabel>
-                            <M.PasswordCheckInput 
+                            <M.PasswordCheckInput
                                 id="password"
                                 type="password"
                                 value={password}
                                 onChange={handleChange}
                                 autoFocus
                             />
-                            {error && 
+                            {error &&
                                 <M.ErrorMessage>{error}</M.ErrorMessage>
                             }
                             <M.SubmitBtn type="submit" >확인</M.SubmitBtn>

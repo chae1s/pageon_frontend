@@ -2,15 +2,25 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const HomeBanner = styled.section`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(90deg, #f8fafc 60%, #eaf4ff 100%);
-    border-radius: var(--border-radius);
-    padding: 40px 32px;
+    width: 100%;
     margin-bottom: 48px;
-    gap: 32px;
-    min-height: 280px;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+`
+
+export const BannerSlider = styled.div<{$currentIndex: number}>`
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: ${({$currentIndex}) => `translateX(-${$currentIndex * 100}%)`};
+    width: 100%;
+`
+
+export const BannerImage = styled.img`
+    width: 100%;
+    flex: 0 0 100%;
+    display: block;
+    object-fit: cover;
 `
 
 export const BannerText = styled.div`
