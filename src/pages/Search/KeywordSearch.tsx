@@ -107,9 +107,9 @@ function KeywordSearch() {
                             <S.KeywordList>
                                 <S.KeywordItemWrap>
                                     {category.keywords.map((keyword) => (
-                                        <S.KeywordItem key={keyword.id}>
-                                            <S.KeywordBtn $active={query === `${keyword.name}`} onClick={() => handleParamClick("keyword", `${keyword.name}`)}>
-                                                {keyword.name}
+                                        <S.KeywordItem key={keyword.keywordId}>
+                                            <S.KeywordBtn $active={query === `${keyword.keyword}`} onClick={() => handleParamClick("keyword", `${keyword.keyword}`)}>
+                                                {keyword.keyword}
                                             </S.KeywordBtn>
                                         </S.KeywordItem>
                                     ))}

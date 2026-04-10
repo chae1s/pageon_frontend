@@ -9,7 +9,7 @@ export interface SimpleContent {
     contentTitle: string;
     author: string;
     cover: string;
-    contentType: string;
+    contentType: ContentType;
     totalAverageRating: number;
     totalRatingCount: number;
 }
@@ -21,23 +21,22 @@ export interface RankingContent {
     cover: string;
     totalAverageRating: number;
     totalRatingCount: number;
-    contentType: string;
+    contentType: ContentType;
 }
 
 export interface ContentDetail {
     contentId: number;
+    contentType: ContentType;
     contentTitle: string;
-    description: string;
     cover: string;
     author: string;
-    keywords: Keyword[];
-    episodes: EpisodeSummary[];
+    description: string;
     serialDay: string;
+    seriesStatus: ContentStatus;
     totalAverageRating: number;
     totalRatingCount: number;
-    status: ContentStatus;
     viewCount: number;
-    contentType: string;
+    keywords: Keyword[];
     isInterested: boolean;
 }
 
@@ -52,7 +51,7 @@ export interface SearchContent {
     keywords: Keyword[];
     totalAverageRating: number;
     totalRatingCount: number;
-    contentType: string;
+    contentType: ContentType;
 }
 
 export interface InterestContent {
@@ -61,7 +60,7 @@ export interface InterestContent {
     author: string;
     episodeUpdatedAt: string;
     cover: string;
-    contentType: string;
+    contentType: ContentType;
     serialDay: string;
     status: ContentStatus;
 }
@@ -74,9 +73,7 @@ export interface RecentReadContent {
     episodeUpdatedAt: string;
     lastReadAt: string;
     lastReadEpisodeId: number;
-    contentType: string;
+    contentType: ContentType;
     serialDay: string;
     status: ContentStatus;
 }
-
-

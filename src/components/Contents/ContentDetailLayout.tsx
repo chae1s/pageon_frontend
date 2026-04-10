@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { ContentType, ContentStatus, ContentDetail } from '../../types/Content';
 import axios from "axios";
 import * as S from "../Styles/ContentDetail.styles"
@@ -12,7 +12,7 @@ interface Props {
 }
 
 
-function ContentDetailLayout({content}: Props) {
+function ContentDetailLayout({ content }: Props) {
 
     const dayKoMap: Record<string, string> = {
         MONDAY: "월요일",
@@ -52,7 +52,7 @@ function ContentDetailLayout({content}: Props) {
 
     const CheckIcon = () => (
         <svg width="16" height="16" viewBox="0 0 16 16" fill="#fff" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 8.5L7 11.5L12 5.5" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M4 8.5L7 11.5L12 5.5" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     )
 
@@ -65,23 +65,23 @@ function ContentDetailLayout({content}: Props) {
             }
             // 백엔드의 토글 API 호출 (동일한 URL로 POST 요청)
             await api.post(`/${formatUrl(content.contentType)}/${content.contentId}/interests`, {});
-    
+
             // 성공 시 상태 반전
             const newStatus = !isInterested;
             setIsInterested(newStatus);
-    
+
             // 상태에 따른 메시지 설정
             setNotificationMessage(
                 newStatus ? "관심 작품에 등록되었습니다." : "관심 작품에서 삭제되었습니다."
             );
-            
+
             setShowNotification(true);
-    
+
             // 3초 후 알림 메시지 숨기기
             setTimeout(() => {
                 setShowNotification(false);
             }, 3000);
-    
+
         } catch (error) {
             console.error("관심 등록 토글 실패:", error);
         }
@@ -89,7 +89,7 @@ function ContentDetailLayout({content}: Props) {
 
     const handleKeywordClick = (contentType: string, name: string) => {
         const params = new URLSearchParams();
-        
+
         params.append("contentType", formatUrl(contentType))
         params.append("keyword", name);
 
@@ -107,23 +107,23 @@ function ContentDetailLayout({content}: Props) {
                 <S.ContentInfoContainer>
                     <S.ContentTitleWrapper>
                         <S.ContentTitle className="detail-title">{content.contentTitle}</S.ContentTitle>
-                        <S.ContentStatus $status={content.status}>{statusMap[content.status]}</S.ContentStatus>
+                        <S.ContentStatus $status={content.seriesStatus}>{statusMap[content.seriesStatus]}</S.ContentStatus>
                         <S.ContentLikeBtnContainer>
                             {isInterested ? (
                                 <S.ContentInterestBtn type='button' onClick={handleToggleInterest}>
                                     <CheckIcon />
                                     <S.ContentLikeBtnText>관심</S.ContentLikeBtnText>
                                 </S.ContentInterestBtn>
-                            ):(
+                            ) : (
                                 <S.ContentInterestRegisterBtn type="button" onClick={handleToggleInterest}>
-                                    <PlusIcon /> 
+                                    <PlusIcon />
                                     <S.ContentLikeBtnText>관심</S.ContentLikeBtnText>
                                 </S.ContentInterestRegisterBtn>
                             )}
-                            
+
                         </S.ContentLikeBtnContainer>
-                        
-                    
+
+
                     </S.ContentTitleWrapper>
                     <S.ContentInfoText>
                         <S.ContentAuthor className="detail-author">{content.author}</S.ContentAuthor>
@@ -145,10 +145,10 @@ function ContentDetailLayout({content}: Props) {
                     </S.ContentDescription>
                     <S.ContentKeywordContainer>
                         {content.keywords.map((keyword, index) => (
-                            <S.ContentKeywordItem key={index} onClick={()=>handleKeywordClick(`${content.contentType}`, `${keyword.name}`)}>#{keyword.name}</S.ContentKeywordItem>
+                            <S.ContentKeywordItem key={index} onClick={() => handleKeywordClick(`${content.contentType}`, `${keyword.keyword}`)}>#{keyword.keyword}</S.ContentKeywordItem>
                         ))}
                     </S.ContentKeywordContainer>
-                    
+
                 </S.ContentInfoContainer>
                 <div className="detail-content-notice">
 

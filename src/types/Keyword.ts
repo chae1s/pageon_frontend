@@ -1,6 +1,6 @@
 export interface Keyword {
-    id: number;
-    name: string;
+    keywordId: number;
+    keyword: string;
 }
 
 

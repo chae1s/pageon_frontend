@@ -2,13 +2,13 @@ import { BestComment } from "./Comments";
 import { EpisodeImage } from "./WebtoonImage";
 
 export interface EpisodeSummary {
-    id: number;
+    episodeId: number;
     episodeNum: number;
     episodeTitle: string;
     publishedAt: string;
     purchasePrice: number;
     rentalPrice: number;
-    episodePurchase: EpisodePurchase | null;
+    episodePurchase: EpisodePurchase;
 }
 
 export interface WebnovelEpisodeDetail {
@@ -43,7 +43,6 @@ export interface WebtoonEpisodeDetail {
 }
 
 export interface EpisodePurchase {
-    id: number;
     purchaseType: string;
     expiredAt: string;
 }

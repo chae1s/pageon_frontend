@@ -6,13 +6,13 @@ import api from "../../api/axiosInstance";
 import { useParams } from "react-router-dom";
 import ContentEpisodeListLayout from "../../components/Contents/ContentEpisodeListLayout";
 
-function WebnovelDetailPage(){
+function WebnovelDetailPage() {
     const [webnovel, setWebnovel] = useState<ContentDetail | null>(null);
     const { contentId } = useParams();
 
     useEffect(() => {
         async function fetchData() {
-            const response = await api.get(`/webnovels/${contentId}`); 
+            const response = await api.get(`/webnovels/${contentId}`);
             setWebnovel(response.data);
             console.log(response.data)
         }
@@ -29,11 +29,11 @@ function WebnovelDetailPage(){
         )
     }
 
-    return(
+    return (
         <MainContainer>
             <NoSidebarMain>
                 <ContentDetailLayout content={webnovel} />
-                <ContentEpisodeListLayout type="webnovels" contentId={webnovel.contentId} contentTitle={webnovel.contentTitle} episodes={webnovel.episodes} />
+                <ContentEpisodeListLayout type="webnovels" contentId={webnovel.contentId} contentTitle={webnovel.contentTitle} />
             </NoSidebarMain>
         </MainContainer>
     )

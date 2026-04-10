@@ -7,13 +7,13 @@ import api from "../../api/axiosInstance";
 import { useParams } from "react-router-dom";
 import ContentEpisodeListLayout from "../../components/Contents/ContentEpisodeListLayout";
 
-function WebtoonDetailPage(){
+function WebtoonDetailPage() {
     const [webtoon, setWebtoon] = useState<ContentDetail | null>(null);
     const { contentId } = useParams();
 
     useEffect(() => {
         async function fetchData() {
-            const response = await api.get(`/webtoons/${contentId}`); 
+            const response = await api.get(`/webtoons/${contentId}`);
             console.log(response.data)
             setWebtoon(response.data);
         }
@@ -30,11 +30,11 @@ function WebtoonDetailPage(){
         )
     }
 
-    return(
+    return (
         <MainContainer>
             <NoSidebarMain>
                 <ContentDetailLayout content={webtoon}></ContentDetailLayout>
-                <ContentEpisodeListLayout type="webtoons" contentId={webtoon.contentId} contentTitle={webtoon.contentTitle} episodes={webtoon.episodes} />
+                <ContentEpisodeListLayout type="webtoons" contentId={webtoon.contentId} contentTitle={webtoon.contentTitle} />
             </NoSidebarMain>
         </MainContainer>
     )

@@ -13,7 +13,7 @@ interface Props {
     emptyMessage: string;
 }
 
-function SearchContentList({contents, totalElements = 0, emptyMessage}: Props) {
+function SearchContentList({ contents, totalElements = 0, emptyMessage }: Props) {
 
     const navigate = useNavigate();
 
@@ -25,11 +25,11 @@ function SearchContentList({contents, totalElements = 0, emptyMessage}: Props) {
 
     const handleKeywordClick = (contentType: string, name: string) => {
         const params = new URLSearchParams();
-        
+
         params.append("contentType", formatUrl(contentType))
         params.append("keyword", name);
 
-        
+
         navigate(`/search/keyword?${params}`)
     }
 
@@ -37,13 +37,13 @@ function SearchContentList({contents, totalElements = 0, emptyMessage}: Props) {
         <S.ContentSection>
             <S.ContentTotalCount>{totalElements}개의 작품</S.ContentTotalCount>
             <S.ContentSearchList>
-               {totalElements > 0 ? (
+                {totalElements > 0 ? (
                     contents?.map((content) => (
                         <S.ContentSearchListItem>
                             <S.ContentSearchWrapper>
                                 <S.ContentSearchItemCoverSection>
                                     <S.ContentCoverWrapper>
-                                        <S.ContentCoverImage src={content.cover} alt={content.contentTitle}/>
+                                        <S.ContentCoverImage src={content.cover} alt={content.contentTitle} />
                                     </S.ContentCoverWrapper>
                                 </S.ContentSearchItemCoverSection>
                                 <S.ContentSearchItemInfoSection>
@@ -67,11 +67,11 @@ function SearchContentList({contents, totalElements = 0, emptyMessage}: Props) {
                                             <S.ContentRatingCount>({content.totalRatingCount ?? 0})</S.ContentRatingCount>
                                         </S.ContentRatingContainer>
                                         <S.ContentDescriptionLink to={`/${formatUrl(content.contentType)}/${content.contentId}`}>
-                                        <S.ContentDescription>{content.description}</S.ContentDescription>
+                                            <S.ContentDescription>{content.description}</S.ContentDescription>
                                         </S.ContentDescriptionLink>
                                         <S.ContentKeywordContainer>
                                             {content.keywords.map((keyword, index) => (
-                                                <S.ContentKeywordItem key={index} onClick={()=>handleKeywordClick(`${content.contentType}`, `${keyword.name}`)}>#{keyword.name}</S.ContentKeywordItem>
+                                                <S.ContentKeywordItem key={index} onClick={() => handleKeywordClick(`${content.contentType}`, `${keyword.keyword}`)}>#{keyword.keyword}</S.ContentKeywordItem>
                                             ))}
                                         </S.ContentKeywordContainer>
                                     </S.ContentInfoWrapper>
@@ -79,16 +79,16 @@ function SearchContentList({contents, totalElements = 0, emptyMessage}: Props) {
                             </S.ContentSearchWrapper>
                         </S.ContentSearchListItem>
                     ))
-                    ) : (
-                        <S.NoResultsWrapper>
-                            <S.NoResultsText>
-                                {emptyMessage}
-                            </S.NoResultsText>
-                        </S.NoResultsWrapper>
+                ) : (
+                    <S.NoResultsWrapper>
+                        <S.NoResultsText>
+                            {emptyMessage}
+                        </S.NoResultsText>
+                    </S.NoResultsWrapper>
 
-                    )
+                )
 
-                } 
+                }
             </S.ContentSearchList>
         </S.ContentSection>
     )

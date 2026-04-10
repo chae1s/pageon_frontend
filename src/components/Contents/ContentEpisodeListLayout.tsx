@@ -1,49 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import * as S from "../Styles/ContentDetail.styles";
 import { EpisodeSummary, PurchaseTargetEpisode } from '../../types/Episodes';
 import dayjs from 'dayjs';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../../api/axiosInstance';
+import { Pagination } from '../../types/Page';
 import { expirationCheck, expirationDate } from '../../utils/rentalEpisodeFormat';
 import PurchaseModal from '../Modals/PurchaseModal';
 import { useAuthCheck } from './Hooks/useAuthCheck';
 import { formatDate } from '../../utils/formatData';
+import { formatUrl } from '../../utils/formatContentType';
 
 interface Props {
     type: string,
     contentId: number,
-    contentTitle: string,
-    episodes: EpisodeSummary[];
+    contentTitle: string
 }
 
 
 type PurchaseModalMode = 'OWN' | 'RENT' | 'SELECT';
 
-function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: Props) {
+function ContentEpisodeListLayout({ type, contentId, contentTitle }: Props) {
 
-    const [sort, setSort] = useState<string>("recent") // first | recent
-    const [showAll, setShowAll] = useState<boolean>(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const sort = searchParams.get('sort') || "recent";
+
+    const [episodes, setEpisodes] = useState<EpisodeSummary[]>([]);
+    const [page, setPage] = useState<number>(0);
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [purchasePrompt, setPurchasePrompt] = useState<{ episode: PurchaseTargetEpisode; mode: PurchaseModalMode; allowRent: boolean } | null>(null);
+
     const { checkLogin } = useAuthCheck();
     const navigate = useNavigate();
     const normalizedType = type.toLowerCase();
     const isWebtoonType = normalizedType === 'webtoon' || normalizedType === 'webtoons';
     const isWebnovelType = normalizedType === 'webnovel' || normalizedType === 'webnovels';
 
-    // 정렬된 에피소드 배열 생성
-    const sortedEpisodes = React.useMemo(() => {
-        if (sort === "first") {
-            // 1화부터: episodeNum 오름차순
-            return [...episodes].sort((a, b) => a.episodeNum - b.episodeNum);
-        } else {
-            // 최신화부터: episodeNum 내림차순
-            return [...episodes].sort((a, b) => b.episodeNum - a.episodeNum);
+    const fetchEpisodes = useCallback(async (pageNum: number, isInitial: boolean = false) => {
+        if (isLoading) return;
+        setIsLoading(true);
+
+        try {
+            const response = await api.get<Pagination<EpisodeSummary>>(`/${type}/${contentId}/episodes`, {
+                params: {
+                    sort: sort,
+                    size: 20,
+                    page: pageNum
+                }
+            });
+
+            const newEpisodes = response.data.content;
+            console.log(response.data.content);
+            if (isInitial) {
+                setEpisodes(newEpisodes);
+            } else {
+                setEpisodes(prev => [...prev, ...newEpisodes]);
+            }
+
+            setHasMore(!response.data.last);
+            setPage(pageNum);
+        } catch (error) {
+            console.error("에피소드 목록 로드 실패:", error);
+        } finally {
+            setIsLoading(false);
         }
-    }, [episodes, sort]);
+    }, [type, contentId, sort, isLoading]);
+
+    useEffect(() => {
+        fetchEpisodes(0, true);
+    }, [type, contentId, sort]);
+
+    const handleLoadMore = () => {
+        if (!isLoading && hasMore) {
+            fetchEpisodes(page + 1);
+        }
+    };
+
+    const handleSortChange = (newSort: string) => {
+        setSearchParams(prev => {
+            prev.set('sort', newSort);
+            return prev;
+        }, { replace: true });
+    };
 
     // id를 string으로 변환
-    const displayedEpisodes = showAll ? sortedEpisodes : sortedEpisodes.slice(0, 20);
-    const displayedIds = displayedEpisodes.map(e => String(e.id));
+    const displayedIds = episodes.map(e => String(e.episodeId));
 
     // 선택된 에피소드 id 배열 (string)
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -62,6 +104,13 @@ function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: P
             setSelectedIds(prev => prev.filter(id => !displayedIds.includes(id)));
         }
     };
+
+    const mapToPurchaseTarget = (episode: EpisodeSummary): PurchaseTargetEpisode => ({
+        id: episode.episodeId,
+        episodeNum: episode.episodeNum,
+        purchasePrice: episode.purchasePrice,
+        rentalPrice: episode.rentalPrice
+    });
 
     // 개별 체크박스 토글
     const handleEpisodeCheck = (id: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +156,7 @@ function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: P
         if (!checkLogin()) {
             return;
         }
-        openPurchasePrompt(episode, 'OWN');
+        openPurchasePrompt(mapToPurchaseTarget(episode), 'OWN');
     };
 
     const handleEpisodeRent = (episode: EpisodeSummary) => (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -115,7 +164,7 @@ function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: P
         if (!checkLogin()) {
             return;
         }
-        openPurchasePrompt(episode, 'RENT');
+        openPurchasePrompt(mapToPurchaseTarget(episode), 'RENT');
     }
 
     const handleEpisodeView = (episodeId: number) => async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -127,14 +176,13 @@ function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: P
         try {
             const response = await api.get(`/${type}/${contentId}/episodes/${episodeId}/subscribe`);
 
-            console.log(response.data)
             if (!response.data) {
-                const targetEpisode = episodes.find(ep => ep.id === episodeId);
+                const targetEpisode = episodes.find(ep => ep.episodeId === episodeId);
                 if (!targetEpisode) {
                     return;
                 }
 
-                openPurchasePrompt(targetEpisode, 'SELECT', isWebtoonType);
+                openPurchasePrompt(mapToPurchaseTarget(targetEpisode), 'SELECT', isWebtoonType);
                 e.preventDefault(); // Prevent navigation
                 return;
             }
@@ -143,11 +191,11 @@ function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: P
                 navigate(`/${type}/${contentId}/viewer/${episodeId}`);
             }
         } catch (error) {
-            const targetEpisode = episodes.find(ep => ep.id === episodeId);
+            const targetEpisode = episodes.find(ep => ep.episodeId === episodeId);
             if (!targetEpisode) {
                 return;
             }
-            openPurchasePrompt(targetEpisode, 'SELECT', isWebtoonType);
+            openPurchasePrompt(mapToPurchaseTarget(targetEpisode), 'SELECT', isWebtoonType);
             e.preventDefault();
         }
     }
@@ -194,11 +242,11 @@ function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: P
                             </S.OptionLeft>
                             <S.OptionRight>
                                 <S.EpisodeFilterWrapper>
-                                    <S.EpisodeFilterBtn type='button' $active={sort === "recent"} onClick={() => setSort('recent')}>
+                                    <S.EpisodeFilterBtn type='button' $active={sort === "recent"} onClick={() => handleSortChange('recent')}>
                                         최신화부터
                                     </S.EpisodeFilterBtn>
                                     <S.FilterBtnDivider></S.FilterBtnDivider>
-                                    <S.EpisodeFilterBtn type='button' $active={sort === "first"} onClick={() => setSort('first')} style={{ width: "50px" }}>
+                                    <S.EpisodeFilterBtn type='button' $active={sort === "first"} onClick={() => handleSortChange('first')} style={{ width: "50px" }}>
                                         1화부터
                                     </S.EpisodeFilterBtn>
                                 </S.EpisodeFilterWrapper>
@@ -206,11 +254,11 @@ function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: P
                         </S.EpisodeListOption>
                         <S.EpisodeListWrapper>
                             <ul>
-                                {displayedEpisodes.map((episode) => {
+                                {episodes.map((episode) => {
                                     const createDate = formatDate(episode.publishedAt)
-                                    const episodeIdStr = String(episode.id);
+                                    const episodeIdStr = String(episode.episodeId);
                                     return (
-                                        <S.EpisodeItem key={episode.id}>
+                                        <S.EpisodeItem key={episode.episodeId}>
                                             <S.EpisodeItemLeft>
                                                 <S.OptionCheckbox
                                                     type='checkbox'
@@ -225,7 +273,7 @@ function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: P
                                                 <S.EpisodeInfoContainer>
                                                     <S.EpisodeTitleAndNum>
                                                         <span>{episode.episodeNum}화</span>
-                                                        <S.EpisodeTitle type='button' onClick={handleEpisodeView(episode.id)}>{episode.episodeTitle}</S.EpisodeTitle>
+                                                        <S.EpisodeTitle type='button' onClick={handleEpisodeView(episode.episodeId)}>{episode.episodeTitle}</S.EpisodeTitle>
                                                     </S.EpisodeTitleAndNum>
                                                     <S.EpisodeDateAndPurchaseData>
                                                         <S.EpisodeCreateDate>
@@ -263,7 +311,7 @@ function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: P
                                                         ) : (
                                                             <S.ViewBtn
                                                                 type="button"
-                                                                onClick={handleEpisodeView(episode.id)}
+                                                                onClick={handleEpisodeView(episode.episodeId)}
                                                             >
                                                                 보기
                                                             </S.ViewBtn>
@@ -276,12 +324,18 @@ function ContentEpisodeListLayout({ type, contentId, contentTitle, episodes }: P
                                 })}
                             </ul>
                         </S.EpisodeListWrapper>
-                        {episodes.length > 20 && !showAll && (
-                            <S.ShowAllBtnContainer>
-                                <S.ShowAllBtn type='button' onClick={() => setShowAll(true)}>
-                                    더보기
-                                </S.ShowAllBtn>
-                            </S.ShowAllBtnContainer>
+                        {isLoading ? (
+                            <S.LoadingContainer>
+                                <S.LoadingSpinner />
+                            </S.LoadingContainer>
+                        ) : (
+                            hasMore && (
+                                <S.ShowAllBtnContainer>
+                                    <S.ShowAllBtn type='button' onClick={handleLoadMore}>
+                                        더보기
+                                    </S.ShowAllBtn>
+                                </S.ShowAllBtnContainer>
+                            )
                         )}
                     </div>
                 </form>

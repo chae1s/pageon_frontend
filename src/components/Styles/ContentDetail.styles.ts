@@ -388,6 +388,28 @@ export const ShowAllBtn = styled.button`
     margin-top: 0;
 `
 
+export const LoadingContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    width: 100%;
+`
+
+export const LoadingSpinner = styled.div`
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(105, 163, 255, 0.2);
+    border-top: 3px solid #69a3ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+`
+
 export const NotificationContainer = styled.div<{$show: boolean}>`
     position: fixed;
     bottom: 20px;
